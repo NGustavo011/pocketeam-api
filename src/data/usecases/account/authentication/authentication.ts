@@ -18,7 +18,10 @@ export class Authentication implements AuthenticationContract {
     if (!accountFounded) return null
     const passwordIsValid = await this.hashComparer.compare(password, accountFounded.password)
     if (!passwordIsValid) return null
-    await this.encrypter.encrypt(accountFounded.id)
-    return await Promise.resolve(null)
+    const token = await this.encrypter.encrypt(accountFounded.id)
+    return {
+      token,
+      name: accountFounded.name
+    }
   }
 }
