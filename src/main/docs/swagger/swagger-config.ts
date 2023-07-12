@@ -1,3 +1,7 @@
+import { swaggerComponents } from './components/swagger-components'
+import { swaggerPaths } from './paths/swagger-paths'
+import { swaggerSchemas } from './schemas/swagger-schemas'
+
 export const swaggerConfig = {
   openapi: '3.0.0',
   info: {
@@ -7,5 +11,13 @@ export const swaggerConfig = {
   },
   servers: [{
     url: '/api'
-  }]
+  }],
+  tags: [
+    {
+      name: 'Login'
+    }
+  ],
+  paths: swaggerPaths,
+  schemas: swaggerSchemas,
+  components: swaggerComponents
 }
