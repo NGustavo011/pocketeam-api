@@ -57,4 +57,10 @@ describe('AddAccount usecase', () => {
     await sut.add(mockAddAccountParams())
     expect(loadSpy).toHaveBeenCalledWith(mockAddAccountParams().email)
   })
+  test('Deve propagar o erro caso o LoadAccountByEmailRepository lance um erro', async () => {
+    const { sut, loadAccountByEmailRepositoryStub } = makeSut()
+    jest.spyOn(loadAccountByEmailRepositoryStub, 'load').mockImplementationOnce(throwError)
+    const promise = sut.add(mockAddAccountParams())
+    await expect(promise).rejects.toThrow()
+  })
 })
