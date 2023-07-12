@@ -17,6 +17,9 @@ export const swaggerConfig = {
       name: 'Auth'
     },
     {
+      name: 'Itens'
+    },
+    {
       name: 'Pokémon'
     }
   ],
