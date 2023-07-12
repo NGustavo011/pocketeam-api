@@ -1,7 +1,7 @@
-export const holdItemsPath = {
+export const holdItemPath = {
   get: {
     tags: ['Itens'],
-    summary: 'Rota para retornar todos os route-items disponíves para os pokémon',
+    summary: 'Rota para retornar todos os hold-items disponíves para os pokémon',
     responses: {
       200: {
         description: 'Sucesso',
