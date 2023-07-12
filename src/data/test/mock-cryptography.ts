@@ -1,3 +1,4 @@
+import { type Encrypter } from '../repositories-contracts/cryptography/encrypter'
 import { type HashComparer } from '../repositories-contracts/cryptography/hash-comparer'
 import { type Hasher } from '../repositories-contracts/cryptography/hasher'
 
@@ -17,4 +18,13 @@ export const mockHashComparer = (): HashComparer => {
     }
   }
   return new HashComparerStub()
+}
+
+export const mockEncrypter = (): Encrypter => {
+  class EncrypterStub implements Encrypter {
+    async encrypt (value: string): Promise<string> {
+      return await Promise.resolve('any_token')
+    }
+  }
+  return new EncrypterStub()
 }
