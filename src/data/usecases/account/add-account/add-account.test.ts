@@ -3,7 +3,7 @@ import { type AddAccountRepository } from '../../../repositories-contracts/accou
 import { type LoadAccountByEmailRepository } from '../../../repositories-contracts/account/load-account-by-email-repository'
 import { type Hasher } from '../../../repositories-contracts/cryptography/hasher'
 import { mockHasher } from '../../../test/mock-cryptography'
-import { mockAddAccountParams, mockAddAccountRepository, mockLoadAccountByEmailRepository } from '../../../test/mock-db-account'
+import { mockAccountModel, mockAddAccountParams, mockAddAccountRepository, mockLoadAccountByEmailRepository } from '../../../test/mock-db-account'
 import { AddAccount } from './add-account'
 
 interface SutTypes {
@@ -68,5 +68,10 @@ describe('AddAccount usecase', () => {
     jest.spyOn(loadAccountByEmailRepositoryStub, 'load').mockReturnValueOnce(Promise.resolve(null))
     const account = await sut.add(mockAddAccountParams())
     expect(account).toBeNull()
+  })
+  test('Deve retornar uma AccountModel com sucesso', async () => {
+    const { sut } = makeSut()
+    const account = await sut.add(mockAddAccountParams())
+    expect(account).toEqual(mockAccountModel())
   })
 })

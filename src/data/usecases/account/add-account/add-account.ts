@@ -17,16 +17,11 @@ export class AddAccount implements AddAccountContract {
     const accountFounded = await this.loadAccountByEmailRepository.load(email)
     if (!accountFounded) return null
     const hashedPassword = await this.hasher.hash(password)
-    await this.addAccountRepository.add({
+    const accountCreated = await this.addAccountRepository.add({
       email,
       name,
       password: hashedPassword
     })
-    return await Promise.resolve({
-      id: '',
-      name: '',
-      email: '',
-      password: ''
-    })
+    return accountCreated
   }
 }
