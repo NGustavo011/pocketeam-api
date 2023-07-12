@@ -3,11 +3,13 @@ import { loginPath } from './login/login-path'
 import { signUpPath } from './login/signup-path'
 import { allPokemonPath } from './pokemon/all-pokemon-path'
 import { pokemonPath } from './pokemon/pokemon-path'
+import { teamPath } from './team/team-path'
 
 export const swaggerPaths = {
   '/login': loginPath,
   '/signup': signUpPath,
   '/hold-item': holdItemPath,
   '/all-pokemon': allPokemonPath,
-  '/pokemon': pokemonPath
+  '/pokemon': pokemonPath,
+  '/team': teamPath
 }

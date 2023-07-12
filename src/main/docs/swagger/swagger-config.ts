@@ -21,6 +21,9 @@ export const swaggerConfig = {
     },
     {
       name: 'Pokémon'
+    },
+    {
+      name: 'Time'
     }
   ],
   paths: swaggerPaths,
