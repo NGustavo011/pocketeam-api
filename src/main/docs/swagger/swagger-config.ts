@@ -15,6 +15,9 @@ export const swaggerConfig = {
   tags: [
     {
       name: 'Auth'
+    },
+    {
+      name: 'Pokémon'
     }
   ],
   paths: swaggerPaths,
