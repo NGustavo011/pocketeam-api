@@ -14,7 +14,7 @@ export const swaggerConfig = {
   }],
   tags: [
     {
-      name: 'Login'
+      name: 'Auth'
     }
   ],
   paths: swaggerPaths,

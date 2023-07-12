@@ -1,6 +1,6 @@
 export const signUpPath = {
   post: {
-    tags: ['Login'],
+    tags: ['Auth'],
     summary: 'Rota para criar um usuário',
     requestBody: {
       content: {
