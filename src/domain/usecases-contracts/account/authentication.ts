@@ -5,6 +5,6 @@ export interface AuthenticationParams {
   password: string
 }
 
-export interface Authentication {
+export interface AuthenticationContract {
   auth: (authenticationParams: AuthenticationParams) => Promise<AuthenticationModel | null>
 }
