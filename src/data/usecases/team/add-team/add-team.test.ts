@@ -34,8 +34,8 @@ describe('AddTeam usecase', () => {
     test('Deve retornar null se AddTeamRepository retornar null', async () => {
       const { sut, addTeamRepositoryStub } = makeSut()
       jest.spyOn(addTeamRepositoryStub, 'add').mockReturnValueOnce(Promise.resolve(null))
-      const pokemon = await sut.add(mockAddTeamParams())
-      expect(pokemon).toBeNull()
+      const team = await sut.add(mockAddTeamParams())
+      expect(team).toBeNull()
     })
   })
   test('Deve retornar um AddTeamReturn com sucesso', async () => {
