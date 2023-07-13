@@ -5,7 +5,7 @@ import { type GetAllPokemonRepository } from '../../../repositories-contracts/po
 export class GetAllPokemon implements GetAllPokemonContract {
   constructor (private readonly getAllPokemonRepository: GetAllPokemonRepository) {}
   async getAll (): Promise<AllPokemonModel | null> {
-    await this.getAllPokemonRepository.getAll()
-    return null
+    const allPokemon = await this.getAllPokemonRepository.getAll()
+    return allPokemon
   }
 }

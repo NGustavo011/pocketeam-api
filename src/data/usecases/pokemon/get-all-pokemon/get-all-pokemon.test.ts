@@ -1,6 +1,6 @@
 import { throwError } from '../../../../domain/test/test-helpers'
 import { type GetAllPokemonRepository } from '../../../repositories-contracts/pokemon/get-all-pokemon-repository'
-import { mockGetAllPokemonRepository } from '../../../test/mock-pokemon'
+import { mockAllPokemonModel, mockGetAllPokemonRepository } from '../../../test/mock-pokemon'
 import { GetAllPokemon } from './get-all-pokemon'
 
 interface SutTypes {
@@ -21,9 +21,9 @@ describe('GetAllPokemon usecase', () => {
   describe('GetAllPokemonRepository dependecy', () => {
     test('Deve chamar GetAllPokemonRepository', async () => {
       const { sut, getAllPokemonRepositoryStub } = makeSut()
-      const getSpy = jest.spyOn(getAllPokemonRepositoryStub, 'getAll')
+      const getAllSpy = jest.spyOn(getAllPokemonRepositoryStub, 'getAll')
       await sut.getAll()
-      expect(getSpy).toHaveBeenCalled()
+      expect(getAllSpy).toHaveBeenCalled()
     })
     test('Deve repassar a exceção se o GetAllPokemonRepository lançar um erro', async () => {
       const { sut, getAllPokemonRepositoryStub } = makeSut()
@@ -31,5 +31,10 @@ describe('GetAllPokemon usecase', () => {
       const promise = sut.getAll()
       await expect(promise).rejects.toThrow()
     })
+  })
+  test('Deve retornar um AllPokemonModel com sucesso', async () => {
+    const { sut } = makeSut()
+    const allPokemon = await sut.getAll()
+    expect(allPokemon).toEqual(mockAllPokemonModel())
   })
 })
