@@ -1,5 +1,5 @@
-import { type HoldItem } from '../../models/hold-item'
+import { type HoldItemModel } from '../../models/hold-item'
 
 export interface GetHoldItemsContract {
-  get: () => Promise<HoldItem[] | null>
+  get: () => Promise<HoldItemModel[] | null>
 }

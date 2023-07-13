@@ -1,3 +1,3 @@
-export interface HoldItem {
+export interface HoldItemModel {
   name: string
 }
