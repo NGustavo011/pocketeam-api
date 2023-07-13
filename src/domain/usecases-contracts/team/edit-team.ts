@@ -1,12 +1,12 @@
-import { type Team } from '../../models/team'
+import { type TeamModel, type Team } from '../../models/team'
 
 export type EditTeamParams = Team & {
   userId: string
   teamId: string
 }
 
-export type EditTeamReturn = Team & { id: string, userId: string }
+export type EditTeamReturn = TeamModel
 
-export interface editTeam {
+export interface EditTeamContract {
   edit: (editTeamParams: EditTeamParams) => Promise<EditTeamReturn | null>
 }

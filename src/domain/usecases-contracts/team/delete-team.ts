@@ -3,6 +3,6 @@ export interface DeleteTeamParams {
   teamId: string
 }
 
-export interface DeleteTeam {
+export interface DeleteTeamContract {
   delete: (deleteTeamParams: DeleteTeamParams) => Promise<void>
 }

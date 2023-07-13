@@ -18,7 +18,7 @@ const makeSut = (): SutTypes => {
 }
 
 describe('GetPokemon usecase', () => {
-  describe('GetPokemonRepository dependecy', () => {
+  describe('GetPokemonRepository dependency', () => {
     test('Deve chamar GetPokemonRepository com os valores corretos', async () => {
       const { sut, getPokemonRepositoryStub } = makeSut()
       const getSpy = jest.spyOn(getPokemonRepositoryStub, 'get')

@@ -68,7 +68,7 @@ describe('Authentication usecase', () => {
       expect(model).toBeNull()
     })
   })
-  describe('EncrypterRepository dependecy', () => {
+  describe('EncrypterRepository dependency', () => {
     test('Deve chamar EncrypterRepository com um id correto', async () => {
       const { sut, encrypterRepositoryStub } = makeSut()
       const encryptSpy = jest.spyOn(encrypterRepositoryStub, 'encrypt')

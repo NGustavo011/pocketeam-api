@@ -1,12 +1,12 @@
-import { type PokemonTeam } from '../../models/team'
+import { type PokemonTeamModel } from '../../models/team'
 
 export interface GetTeamParams {
   userId: string
   searchUserId?: string
 }
 
-export type GetTeamReturn = PokemonTeam[] & { id: string, userId: string }
+export type GetTeamReturn = PokemonTeamModel
 
-export interface getTeam {
+export interface GetTeamContract {
   get: (getTeamParams: GetTeamParams) => Promise<GetTeamReturn | null>
 }

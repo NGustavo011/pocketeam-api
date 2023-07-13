@@ -18,7 +18,7 @@ const makeSut = (): SutTypes => {
 }
 
 describe('GetHoldItems usecase', () => {
-  describe('GetHoldItemsRepository dependecy', () => {
+  describe('GetHoldItemsRepository dependency', () => {
     test('Deve chamar GetHoldItemsRepository', async () => {
       const { sut, getHoldItemsRepositoryStub } = makeSut()
       const getSpy = jest.spyOn(getHoldItemsRepositoryStub, 'get')
