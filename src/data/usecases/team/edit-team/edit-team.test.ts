@@ -1,6 +1,6 @@
 import { throwError } from '../../../../domain/test/test-helpers'
 import { type EditTeamRepository } from '../../../repositories-contracts/team/edit-team-repository'
-import { mockEditTeamParams, mockEditTeamRepository } from '../../../test/mock-team'
+import { mockEditTeamParams, mockEditTeamRepository, mockEditTeamReturn } from '../../../test/mock-team'
 import { EditTeam } from './edit-team'
 
 interface SutTypes {
@@ -37,5 +37,10 @@ describe('EditTeam usecase', () => {
       const team = await sut.edit(mockEditTeamParams())
       expect(team).toBeNull()
     })
+  })
+  test('Deve retornar um EditTeamReturn com sucesso', async () => {
+    const { sut } = makeSut()
+    const team = await sut.edit(mockEditTeamParams())
+    expect(team).toEqual(mockEditTeamReturn())
   })
 })

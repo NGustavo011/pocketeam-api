@@ -7,7 +7,7 @@ export class EditTeam implements EditTeamContract {
   }
 
   async edit (editTeamParams: EditTeamParams): Promise<EditTeamReturn | null> {
-    await this.editTeamRepository.edit(editTeamParams)
-    return null
+    const team = await this.editTeamRepository.edit(editTeamParams)
+    return team
   }
 }

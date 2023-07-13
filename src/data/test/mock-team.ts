@@ -187,7 +187,7 @@ export const mockAddTeamRepository = (): AddTeamRepository => {
 export const mockEditTeamRepository = (): EditTeamRepository => {
   class EditTeamRepositoryStub implements EditTeamRepository {
     async edit (editTeamParams: EditTeamParams): Promise<EditTeamReturn | null> {
-      return await Promise.resolve(null)
+      return await Promise.resolve(mockEditTeamReturn())
     }
   }
   return new EditTeamRepositoryStub()
