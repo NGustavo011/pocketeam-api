@@ -14,7 +14,7 @@ export class AddAccount implements AddAccountContract {
 
   async add (account: AddAccountParams): Promise<AccountModel | null> {
     const { email, name, password } = account
-    const accountFounded = await this.loadAccountByEmailRepository.load(email)
+    const accountFounded = await this.loadAccountByEmailRepository.loadByEmail(email)
     if (!accountFounded) return null
     const hashedPassword = await this.hasherReposiHasherRepository.hash(password)
     const accountCreated = await this.addAccountRepository.add({

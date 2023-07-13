@@ -14,7 +14,7 @@ export class Authentication implements AuthenticationContract {
 
   async auth (authenticationParams: AuthenticationParams): Promise<AuthenticationModel | null> {
     const { email, password } = authenticationParams
-    const accountFounded = await this.loadAccountByEmailRepository.load(email)
+    const accountFounded = await this.loadAccountByEmailRepository.loadByEmail(email)
     if (!accountFounded) return null
     const passwordIsValid = await this.hashComparerRepository.compare(password, accountFounded.password)
     if (!passwordIsValid) return null

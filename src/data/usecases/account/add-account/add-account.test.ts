@@ -58,19 +58,19 @@ describe('AddAccount usecase', () => {
   describe('LoadAccountByEmailRepository dependency', () => {
     test('Deve chamar o LoadAccountByEmailRepository com o valor correto', async () => {
       const { sut, loadAccountByEmailRepositoryStub } = makeSut()
-      const loadSpy = jest.spyOn(loadAccountByEmailRepositoryStub, 'load')
+      const loadSpy = jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail')
       await sut.add(mockAddAccountParams())
       expect(loadSpy).toHaveBeenCalledWith(mockAddAccountParams().email)
     })
     test('Deve propagar o erro caso o LoadAccountByEmailRepository lance um erro', async () => {
       const { sut, loadAccountByEmailRepositoryStub } = makeSut()
-      jest.spyOn(loadAccountByEmailRepositoryStub, 'load').mockImplementationOnce(throwError)
+      jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockImplementationOnce(throwError)
       const promise = sut.add(mockAddAccountParams())
       await expect(promise).rejects.toThrow()
     })
     test('Deve retornar null caso LoadAccountByEmailRepository retorne null', async () => {
       const { sut, loadAccountByEmailRepositoryStub } = makeSut()
-      jest.spyOn(loadAccountByEmailRepositoryStub, 'load').mockReturnValueOnce(Promise.resolve(null))
+      jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(Promise.resolve(null))
       const account = await sut.add(mockAddAccountParams())
       expect(account).toBeNull()
     })
