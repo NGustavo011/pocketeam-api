@@ -1,27 +1,27 @@
 import { type AuthenticationModel } from '../../../../domain/models/authentication'
 import { throwError } from '../../../../domain/test/test-helpers'
 import { type LoadAccountByEmailRepository } from '../../../repositories-contracts/account/load-account-by-email-repository'
-import { type Encrypter } from '../../../repositories-contracts/cryptography/encrypter'
-import { type HashComparer } from '../../../repositories-contracts/cryptography/hash-comparer'
-import { mockEncrypter, mockHashComparer } from '../../../test/mock-cryptography'
+import { type EncrypterRepository } from '../../../repositories-contracts/cryptography/encrypter-repository'
+import { type HashComparerRepository } from '../../../repositories-contracts/cryptography/hash-comparer-repository'
+import { mockEncrypterRepository, mockHashComparerRepository } from '../../../test/mock-cryptography'
 import { mockAccountModel, mockAuthentication, mockLoadAccountByEmailRepository } from '../../../test/mock-db-account'
 import { Authentication } from './authentication'
 
 interface SutTypes {
-  encrypterStub: Encrypter
-  hashComparerStub: HashComparer
+  encrypterRepositoryStub: EncrypterRepository
+  hashComparerRepositoryStub: HashComparerRepository
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
   sut: Authentication
 }
 
 const makeSut = (): SutTypes => {
-  const encrypterStub = mockEncrypter()
-  const hashComparerStub = mockHashComparer()
+  const encrypterRepositoryStub = mockEncrypterRepository()
+  const hashComparerRepositoryStub = mockHashComparerRepository()
   const loadAccountByEmailRepositoryStub = mockLoadAccountByEmailRepository()
-  const sut = new Authentication(loadAccountByEmailRepositoryStub, hashComparerStub, encrypterStub)
+  const sut = new Authentication(loadAccountByEmailRepositoryStub, hashComparerRepositoryStub, encrypterRepositoryStub)
   return {
-    encrypterStub,
-    hashComparerStub,
+    encrypterRepositoryStub,
+    hashComparerRepositoryStub,
     loadAccountByEmailRepositoryStub,
     sut
   }
@@ -48,36 +48,36 @@ describe('Authentication usecase', () => {
       expect(account).toBeNull()
     })
   })
-  describe('HashComparer dependency', () => {
-    test('Deve chamar HashComparer com valores corretos', async () => {
-      const { sut, hashComparerStub } = makeSut()
-      const compareSpy = jest.spyOn(hashComparerStub, 'compare')
+  describe('HashComparerRepository dependency', () => {
+    test('Deve chamar HashComparerRepository com valores corretos', async () => {
+      const { sut, hashComparerRepositoryStub } = makeSut()
+      const compareSpy = jest.spyOn(hashComparerRepositoryStub, 'compare')
       await sut.auth(mockAuthentication())
       expect(compareSpy).toHaveBeenCalledWith(mockAuthentication().password, mockAccountModel().password)
     })
-    test('Deve repassar a exceção se o HashComparer lançar um erro', async () => {
-      const { sut, hashComparerStub } = makeSut()
-      jest.spyOn(hashComparerStub, 'compare').mockImplementationOnce(throwError)
+    test('Deve repassar a exceção se o HashComparerRepository lançar um erro', async () => {
+      const { sut, hashComparerRepositoryStub } = makeSut()
+      jest.spyOn(hashComparerRepositoryStub, 'compare').mockImplementationOnce(throwError)
       const promise = sut.auth(mockAuthentication())
       await expect(promise).rejects.toThrow()
     })
-    test('Deve retornar vázio se o HashComparer retornar falso', async () => {
-      const { sut, hashComparerStub } = makeSut()
-      jest.spyOn(hashComparerStub, 'compare').mockReturnValueOnce(new Promise(resolve => { resolve(false) }))
+    test('Deve retornar vázio se o HashComparerRepository retornar falso', async () => {
+      const { sut, hashComparerRepositoryStub } = makeSut()
+      jest.spyOn(hashComparerRepositoryStub, 'compare').mockReturnValueOnce(new Promise(resolve => { resolve(false) }))
       const model = await sut.auth(mockAuthentication())
       expect(model).toBeNull()
     })
   })
-  describe('Encrypter dependecy', () => {
-    test('Deve chamar Encrypter com um id correto', async () => {
-      const { sut, encrypterStub } = makeSut()
-      const encryptSpy = jest.spyOn(encrypterStub, 'encrypt')
+  describe('EncrypterRepository dependecy', () => {
+    test('Deve chamar EncrypterRepository com um id correto', async () => {
+      const { sut, encrypterRepositoryStub } = makeSut()
+      const encryptSpy = jest.spyOn(encrypterRepositoryStub, 'encrypt')
       await sut.auth(mockAuthentication())
       expect(encryptSpy).toHaveBeenCalledWith(mockAccountModel().id)
     })
-    test('Deve repassar a exceção se o Encrypter lançar um erro', async () => {
-      const { sut, encrypterStub } = makeSut()
-      jest.spyOn(encrypterStub, 'encrypt').mockImplementationOnce(throwError)
+    test('Deve repassar a exceção se o EncrypterRepository lançar um erro', async () => {
+      const { sut, encrypterRepositoryStub } = makeSut()
+      jest.spyOn(encrypterRepositoryStub, 'encrypt').mockImplementationOnce(throwError)
       const promise = sut.auth(mockAuthentication())
       await expect(promise).rejects.toThrow()
     })

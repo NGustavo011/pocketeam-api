@@ -1,30 +1,30 @@
-import { type Encrypter } from '../repositories-contracts/cryptography/encrypter'
-import { type HashComparer } from '../repositories-contracts/cryptography/hash-comparer'
-import { type Hasher } from '../repositories-contracts/cryptography/hasher'
+import { type EncrypterRepository } from '../repositories-contracts/cryptography/encrypter-repository'
+import { type HashComparerRepository } from '../repositories-contracts/cryptography/hash-comparer-repository'
+import { type HasherRepository } from '../repositories-contracts/cryptography/hasher-repository'
 
-export const mockHasher = (): Hasher => {
-  class HasherStub implements Hasher {
+export const mockHasherRepository = (): HasherRepository => {
+  class HasherRepositoryStub implements HasherRepository {
     async hash (value: string): Promise<string> {
       return await Promise.resolve('hashed_value')
     }
   }
-  return new HasherStub()
+  return new HasherRepositoryStub()
 }
 
-export const mockHashComparer = (): HashComparer => {
-  class HashComparerStub implements HashComparer {
+export const mockHashComparerRepository = (): HashComparerRepository => {
+  class HashComparerRepositoryStub implements HashComparerRepository {
     async compare (value: string, hash: string): Promise<boolean> {
       return await Promise.resolve(true)
     }
   }
-  return new HashComparerStub()
+  return new HashComparerRepositoryStub()
 }
 
-export const mockEncrypter = (): Encrypter => {
-  class EncrypterStub implements Encrypter {
+export const mockEncrypterRepository = (): EncrypterRepository => {
+  class EncrypterRepositoryStub implements EncrypterRepository {
     async encrypt (value: string): Promise<string> {
       return await Promise.resolve('any_token')
     }
   }
-  return new EncrypterStub()
+  return new EncrypterRepositoryStub()
 }

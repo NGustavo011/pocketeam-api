@@ -1,14 +1,14 @@
 import { type AuthenticationModel } from '../../../../domain/models/authentication'
 import { type AuthenticationParams, type AuthenticationContract } from '../../../../domain/usecases-contracts/account/authentication'
 import { type LoadAccountByEmailRepository } from '../../../repositories-contracts/account/load-account-by-email-repository'
-import { type Encrypter } from '../../../repositories-contracts/cryptography/encrypter'
-import { type HashComparer } from '../../../repositories-contracts/cryptography/hash-comparer'
+import { type EncrypterRepository } from '../../../repositories-contracts/cryptography/encrypter-repository'
+import { type HashComparerRepository } from '../../../repositories-contracts/cryptography/hash-comparer-repository'
 
 export class Authentication implements AuthenticationContract {
   constructor (
     private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository,
-    private readonly hashComparer: HashComparer,
-    private readonly encrypter: Encrypter
+    private readonly hashComparerRepository: HashComparerRepository,
+    private readonly encrypterRepository: EncrypterRepository
   ) {
   }
 
@@ -16,9 +16,9 @@ export class Authentication implements AuthenticationContract {
     const { email, password } = authenticationParams
     const accountFounded = await this.loadAccountByEmailRepository.load(email)
     if (!accountFounded) return null
-    const passwordIsValid = await this.hashComparer.compare(password, accountFounded.password)
+    const passwordIsValid = await this.hashComparerRepository.compare(password, accountFounded.password)
     if (!passwordIsValid) return null
-    const token = await this.encrypter.encrypt(accountFounded.id)
+    const token = await this.encrypterRepository.encrypt(accountFounded.id)
     return {
       token,
       name: accountFounded.name

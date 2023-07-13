@@ -1,3 +1,3 @@
-export interface Hasher {
+export interface HasherRepository {
   hash: (value: string) => Promise<string>
 }

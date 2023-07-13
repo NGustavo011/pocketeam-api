@@ -1,25 +1,25 @@
 import { throwError } from '../../../../domain/test/test-helpers'
 import { type AddAccountRepository } from '../../../repositories-contracts/account/add-account-repository'
 import { type LoadAccountByEmailRepository } from '../../../repositories-contracts/account/load-account-by-email-repository'
-import { type Hasher } from '../../../repositories-contracts/cryptography/hasher'
-import { mockHasher } from '../../../test/mock-cryptography'
+import { type HasherRepository } from '../../../repositories-contracts/cryptography/hasher-repository'
+import { mockHasherRepository } from '../../../test/mock-cryptography'
 import { mockAccountModel, mockAddAccountParams, mockAddAccountRepository, mockLoadAccountByEmailRepository } from '../../../test/mock-db-account'
 import { AddAccount } from './add-account'
 
 interface SutTypes {
-  hasherStub: Hasher
+  hasherRepositoryStub: HasherRepository
   addAccountRepositoryStub: AddAccountRepository
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
   sut: AddAccount
 }
 
 const makeSut = (): SutTypes => {
-  const hasherStub = mockHasher()
+  const hasherRepositoryStub = mockHasherRepository()
   const addAccountRepositoryStub = mockAddAccountRepository()
   const loadAccountByEmailRepositoryStub = mockLoadAccountByEmailRepository()
-  const sut = new AddAccount(hasherStub, addAccountRepositoryStub, loadAccountByEmailRepositoryStub)
+  const sut = new AddAccount(hasherRepositoryStub, addAccountRepositoryStub, loadAccountByEmailRepositoryStub)
   return {
-    hasherStub,
+    hasherRepositoryStub,
     addAccountRepositoryStub,
     loadAccountByEmailRepositoryStub,
     sut
@@ -27,16 +27,16 @@ const makeSut = (): SutTypes => {
 }
 
 describe('AddAccount usecase', () => {
-  describe('Hasher dependency', () => {
-    test('Deve chamar o Hasher com a senha correta', async () => {
-      const { sut, hasherStub } = makeSut()
-      const hashSpy = jest.spyOn(hasherStub, 'hash')
+  describe('HasherRepository dependency', () => {
+    test('Deve chamar o HasherRepository com a senha correta', async () => {
+      const { sut, hasherRepositoryStub } = makeSut()
+      const hashSpy = jest.spyOn(hasherRepositoryStub, 'hash')
       await sut.add(mockAddAccountParams())
       expect(hashSpy).toHaveBeenCalledWith(mockAddAccountParams().password)
     })
-    test('Deve propagar o erro caso o Hasher lance um erro', async () => {
-      const { sut, hasherStub } = makeSut()
-      jest.spyOn(hasherStub, 'hash').mockImplementationOnce(throwError)
+    test('Deve propagar o erro caso o HasherRepository lance um erro', async () => {
+      const { sut, hasherRepositoryStub } = makeSut()
+      jest.spyOn(hasherRepositoryStub, 'hash').mockImplementationOnce(throwError)
       const promise = sut.add(mockAddAccountParams())
       await expect(promise).rejects.toThrow()
     })
