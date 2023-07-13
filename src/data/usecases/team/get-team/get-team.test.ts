@@ -1,6 +1,6 @@
-import { throwError } from '../../../domain/test/test-helpers'
-import { type GetTeamRepository } from '../../repositories-contracts/team/get-team-repository'
-import { mockGetTeamParams, mockGetTeamRepository, mockPokemonTeamModel } from '../../test/mock-team'
+import { throwError } from '../../../../domain/test/test-helpers'
+import { type GetTeamRepository } from '../../../repositories-contracts/team/get-team-repository'
+import { mockGetTeamParams, mockGetTeamRepository, mockPokemonTeamModel } from '../../../test/mock-team'
 import { GetTeam } from './get-team'
 
 interface SutTypes {
