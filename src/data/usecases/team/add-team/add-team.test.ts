@@ -1,6 +1,6 @@
 import { throwError } from '../../../../domain/test/test-helpers'
 import { type AddTeamRepository } from '../../../repositories-contracts/team/add-team-repository'
-import { mockAddTeamParams, mockAddTeamRepository } from '../../../test/mock-team'
+import { mockAddTeamParams, mockAddTeamRepository, mockAddTeamReturn } from '../../../test/mock-team'
 import { AddTeam } from './add-team'
 
 interface SutTypes {
@@ -37,5 +37,10 @@ describe('AddTeam usecase', () => {
       const pokemon = await sut.add(mockAddTeamParams())
       expect(pokemon).toBeNull()
     })
+  })
+  test('Deve retornar um AddTeamReturn com sucesso', async () => {
+    const { sut } = makeSut()
+    const team = await sut.add(mockAddTeamParams())
+    expect(team).toEqual(mockAddTeamReturn())
   })
 })

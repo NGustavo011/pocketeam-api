@@ -6,7 +6,7 @@ export class AddTeam implements AddTeamContract {
   }
 
   async add (addTeamParams: AddTeamParams): Promise<AddTeamReturn | null> {
-    await this.addTeamRepository.add(addTeamParams)
-    return null
+    const team = await this.addTeamRepository.add(addTeamParams)
+    return team
   }
 }
