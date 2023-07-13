@@ -6,14 +6,12 @@ export type AllPokemonModel = PokemonListModel[]
 
 export interface PokemonModel {
   name: string
-  abilities: [
-    {
-      name: string
-    }
-  ]
-  moves: [
-    {
-      name: string
-    }
-  ]
+  abilities:
+  Array<{
+    name: string
+  }>
+  moves:
+  Array<{
+    name: string
+  }>
 }
