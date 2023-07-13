@@ -1,8 +1,10 @@
 import { type PokemonTeamModel } from '../../domain/models/team'
 import { type AddTeamReturn, type AddTeamParams } from '../../domain/usecases-contracts/team/add-team'
+import { type DeleteTeamParams } from '../../domain/usecases-contracts/team/delete-team'
 import { type EditTeamReturn, type EditTeamParams } from '../../domain/usecases-contracts/team/edit-team'
 import { type GetTeamParams } from '../../domain/usecases-contracts/team/get-team'
 import { type AddTeamRepository } from '../repositories-contracts/team/add-team-repository'
+import { type DeleteTeamRepository } from '../repositories-contracts/team/delete-team-repository'
 import { type EditTeamRepository } from '../repositories-contracts/team/edit-team-repository'
 import { type GetTeamRepository } from '../repositories-contracts/team/get-team-repository'
 
@@ -166,6 +168,13 @@ export const mockEditTeamReturn = (): EditTeamReturn => {
   }
 }
 
+export const mockDeleteTeamParams = (): DeleteTeamParams => {
+  return {
+    teamId: 'team_id',
+    userId: 'user_id'
+  }
+}
+
 export const mockGetTeamRepository = (): GetTeamRepository => {
   class GetTeamRepositoryStub implements GetTeamRepository {
     async get (getTeamParams: GetTeamParams): Promise<PokemonTeamModel | null> {
@@ -191,4 +200,13 @@ export const mockEditTeamRepository = (): EditTeamRepository => {
     }
   }
   return new EditTeamRepositoryStub()
+}
+
+export const mockDeleteTeamRepository = (): DeleteTeamRepository => {
+  class DeleteTeamRepositoryStub implements DeleteTeamRepository {
+    async delete (deleteTeamParams: DeleteTeamParams): Promise<void> {
+
+    }
+  }
+  return new DeleteTeamRepositoryStub()
 }
