@@ -1,0 +1,30 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id       String @id @default(uuid())
+  name     String
+  email    String
+  password String
+  teams    Team[]
+}
+
+model Pokemon {
+  id       String   @id @default(uuid())
+  name     String
+  ability  String
+  holdItem String
+  moves    String[]
+  teamId   String
+  team     Team     @relation(fields: [teamId], references: [id])
+}
+
+model Team {
+  id      String    @id @default(uuid())
+  team    Pokemon[]
+  visible Boolean
+  userId  String
+  user    Account   @relation(fields: [userId], references: [id])
+}
