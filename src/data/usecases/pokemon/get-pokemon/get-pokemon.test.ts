@@ -38,4 +38,9 @@ describe('GetPokemon usecase', () => {
       expect(pokemon).toBeNull()
     })
   })
+  test('Deve retornar um PokemonModel com sucesso', async () => {
+    const { sut } = makeSut()
+    const pokemon = await sut.get(mockPokemonModel().name)
+    expect(pokemon).toEqual(mockPokemonModel())
+  })
 })

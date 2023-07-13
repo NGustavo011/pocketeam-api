@@ -9,6 +9,6 @@ export class GetPokemon implements GetPokemonContract {
   async get (name: string): Promise<PokemonModel | null> {
     const pokemon = await this.getPokemonRepository.get(name)
     if (!pokemon) return null
-    return null
+    return pokemon
   }
 }
