@@ -7,7 +7,7 @@ export class GetTeam implements GetTeamContract {
   }
 
   async get (getTeamParams: GetTeamParams): Promise<PokemonTeamModel | null> {
-    await this.getTeamRepository.get(getTeamParams)
-    return null
+    const team = await this.getTeamRepository.get(getTeamParams)
+    return team
   }
 }

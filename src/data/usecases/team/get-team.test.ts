@@ -1,6 +1,6 @@
 import { throwError } from '../../../domain/test/test-helpers'
 import { type GetTeamRepository } from '../../repositories-contracts/team/get-team-repository'
-import { mockGetTeamParams, mockGetTeamRepository } from '../../test/mock-team'
+import { mockGetTeamParams, mockGetTeamRepository, mockPokemonTeamModel } from '../../test/mock-team'
 import { GetTeam } from './get-team'
 
 interface SutTypes {
@@ -37,5 +37,10 @@ describe('GetTeam usecase', () => {
       const pokemon = await sut.get(mockGetTeamParams())
       expect(pokemon).toBeNull()
     })
+  })
+  test('Deve retornar um GetTeamReturn com sucesso', async () => {
+    const { sut } = makeSut()
+    const team = await sut.get(mockGetTeamParams())
+    expect(team).toEqual(mockPokemonTeamModel())
   })
 })
