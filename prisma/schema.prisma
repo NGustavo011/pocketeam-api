@@ -1,3 +1,8 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["rhel-openssl-1.0.x", "debian-openssl-1.1.x"]
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -23,8 +28,8 @@ model Pokemon {
 
 model Team {
   id      String    @id @default(uuid())
-  team    Pokemon[]
   visible Boolean
   userId  String
+  team    Pokemon[]
   user    Account   @relation(fields: [userId], references: [id])
 }
