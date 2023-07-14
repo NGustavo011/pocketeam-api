@@ -1,11 +1,12 @@
 import { throwError } from '../../../../domain/test/test-helpers'
 import { type AddAccountContract } from '../../../../domain/usecases-contracts/account/add-account'
+import { type AuthenticationContract } from '../../../../domain/usecases-contracts/account/authentication'
 import { mockValidation } from '../../../../validation/test/mock-validation'
 import { type HttpRequest } from '../../../contracts/http'
 import { type Validation } from '../../../contracts/validation'
 import { EmailInUseError, MissingParamError, ServerError } from '../../../errors'
 import { badRequest, forbidden, serverError } from '../../../helpers/http/http-helper'
-import { mockAddAccount } from '../../../test/mock-account'
+import { mockAddAccount, mockAuthentication } from '../../../test/mock-account'
 import { SignUpController } from './signup-controller'
 
 const mockRequest = (): HttpRequest => {
@@ -23,14 +24,16 @@ interface SutTypes {
   sut: SignUpController
   addAccountStub: AddAccountContract
   validationStub: Validation
+  authenticationStub: AuthenticationContract
 }
 
 const makeSut = (): SutTypes => {
   const addAccountStub = mockAddAccount()
   const validationStub = mockValidation()
-  const sut = new SignUpController(addAccountStub, validationStub)
+  const authenticationStub = mockAuthentication()
+  const sut = new SignUpController(addAccountStub, validationStub, authenticationStub)
   return {
-    sut, addAccountStub, validationStub
+    sut, addAccountStub, validationStub, authenticationStub
   }
 }
 
@@ -67,11 +70,22 @@ describe('SignUp Controller', () => {
       await sut.handle(httpRequest)
       expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
     })
+    test('Retorne status 400 se o Validation retornar um erro', async () => {
+      const { sut, validationStub } = makeSut()
+      jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new MissingParamError('any_field'))
+      const httpResponse = await sut.handle(mockRequest())
+      expect(httpResponse).toEqual(badRequest(new MissingParamError('any_field')))
+    })
   })
-  test('Retorne status 400 se o Validation retornar um erro', async () => {
-    const { sut, validationStub } = makeSut()
-    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new MissingParamError('any_field'))
-    const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('any_field')))
+  describe('Authentication dependency', () => {
+    test('Deve chamar a autenticação com valores corretos', async () => {
+      const { sut, authenticationStub } = makeSut()
+      const authSpy = jest.spyOn(authenticationStub, 'auth')
+      await sut.handle(mockRequest())
+      expect(authSpy).toHaveBeenCalledWith({
+        email: 'any_mail@mail.com',
+        password: 'any_password'
+      })
+    })
   })
 })
