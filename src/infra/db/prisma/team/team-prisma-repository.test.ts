@@ -1,7 +1,8 @@
-import { mockAccountModel } from '../../../../data/test/mock-db-account'
-import { mockAddTeamParams } from '../../../../data/test/mock-team'
+import { mockAddTeamParams, mockEditTeamParams } from '../../../../data/test/mock-team'
 import { prisma } from '../../../../main/config/prisma'
+import { mockPrismaAccountToTeam } from '../../../test/prisma/account'
 import { clearDatabase } from '../../../test/prisma/clear-database'
+import { mockPrismaTeam } from '../../../test/prisma/team'
 import { TeamPrismaRepository } from './team-prisma-repository'
 
 const makeSut = (): TeamPrismaRepository => {
@@ -21,20 +22,28 @@ describe('TeamPrismaRepository', () => {
   describe('add()', () => {
     test('Deve realizar com sucesso o método de add', async () => {
       const sut = makeSut()
-      const accountModel = mockAccountModel()
-      await prisma.account.create({
-        data: {
-          id: 'user_id',
-          name: accountModel.name,
-          email: accountModel.email,
-          password: accountModel.password
-        }
-      })
+      await mockPrismaAccountToTeam()
       const teamCreated = await sut.add(mockAddTeamParams())
       expect(teamCreated).toBeTruthy()
       expect(teamCreated?.id).toBeTruthy()
       const team = await prisma.team.findFirst({ where: { id: teamCreated?.id } })
       expect(team).toBeTruthy()
+    })
+  })
+  describe('edit()', () => {
+    test('Deve realizar com sucesso o método edit', async () => {
+      const sut = makeSut()
+      await mockPrismaAccountToTeam()
+      await mockPrismaTeam()
+      const teamBeforeEdit = await prisma.team.findFirst({ where: { id: 'team_id' } })
+      expect(teamBeforeEdit).toBeTruthy()
+      expect(teamBeforeEdit?.visible).toBeTruthy()
+      const teamEdited = await sut.edit(mockEditTeamParams())
+      expect(teamEdited).toBeTruthy()
+      expect(teamEdited?.visible).toBeFalsy()
+      const team = await prisma.team.findFirst({ where: { id: teamEdited?.id }, select: { team: true } })
+      expect(team).toBeTruthy()
+      expect(team?.team.length).toBe(1)
     })
   })
 })

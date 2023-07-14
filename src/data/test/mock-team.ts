@@ -133,7 +133,7 @@ export const mockEditTeamParams = (): EditTeamParams => {
         }
       }
     ],
-    visible: true
+    visible: false
   }
 }
 
