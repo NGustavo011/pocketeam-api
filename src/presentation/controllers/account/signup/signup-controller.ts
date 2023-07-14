@@ -4,7 +4,7 @@ import { Controller } from '../../../contracts/controller'
 import { type HttpRequest, type HttpResponse } from '../../../contracts/http'
 import { type Validation } from '../../../contracts/validation'
 import { EmailInUseError } from '../../../errors'
-import { badRequest, forbidden } from '../../../helpers/http/http-helper'
+import { badRequest, forbidden, ok } from '../../../helpers/http/http-helper'
 
 export class SignUpController extends Controller {
   constructor (
@@ -25,13 +25,10 @@ export class SignUpController extends Controller {
       password
     })
     if (!account) { return forbidden(new EmailInUseError()) }
-    await this.authentication.auth({
+    const authenticationModel = await this.authentication.auth({
       email,
       password
     })
-    return {
-      body: {},
-      statusCode: 0
-    }
+    return ok(authenticationModel)
   }
 }
