@@ -204,8 +204,8 @@ export const mockEditTeamRepository = (): EditTeamRepository => {
 
 export const mockDeleteTeamRepository = (): DeleteTeamRepository => {
   class DeleteTeamRepositoryStub implements DeleteTeamRepository {
-    async delete (deleteTeamParams: DeleteTeamParams): Promise<void> {
-
+    async delete (deleteTeamParams: DeleteTeamParams): Promise<boolean> {
+      return true
     }
   }
   return new DeleteTeamRepositoryStub()

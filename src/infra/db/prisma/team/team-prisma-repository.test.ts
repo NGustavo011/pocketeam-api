@@ -1,4 +1,4 @@
-import { mockAddTeamParams, mockEditTeamParams } from '../../../../data/test/mock-team'
+import { mockAddTeamParams, mockDeleteTeamParams, mockEditTeamParams } from '../../../../data/test/mock-team'
 import { prisma } from '../../../../main/config/prisma'
 import { mockPrismaAccountToTeam } from '../../../test/prisma/account'
 import { clearDatabase } from '../../../test/prisma/clear-database'
@@ -60,6 +60,20 @@ describe('TeamPrismaRepository', () => {
       const sut = makeSut()
       const teamEdited = await sut.edit(mockEditTeamParams())
       expect(teamEdited).toBeNull()
+    })
+  })
+  describe('delete()', () => {
+    test('Deve realizar com sucesso o método delete', async () => {
+      const sut = makeSut()
+      await mockPrismaAccountToTeam()
+      await mockPrismaTeam()
+      const teamBeforeEdit = await prisma.team.findFirst({ where: { id: 'team_id' } })
+      expect(teamBeforeEdit).toBeTruthy()
+      const deleteTeamParams = mockDeleteTeamParams()
+      const removed = await sut.delete(deleteTeamParams)
+      expect(removed).toBeTruthy()
+      const team = await prisma.team.findFirst({ where: { id: deleteTeamParams.teamId } })
+      expect(team).toBeFalsy()
     })
   })
 })

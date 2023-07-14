@@ -1,10 +1,12 @@
 import { type AddTeamRepository } from '../../../../data/repositories-contracts/team/add-team-repository'
+import { type DeleteTeamRepository } from '../../../../data/repositories-contracts/team/delete-team-repository'
 import { type EditTeamRepository } from '../../../../data/repositories-contracts/team/edit-team-repository'
 import { type AddTeamReturn, type AddTeamParams } from '../../../../domain/usecases-contracts/team/add-team'
+import { type DeleteTeamParams } from '../../../../domain/usecases-contracts/team/delete-team'
 import { type EditTeamParams, type EditTeamReturn } from '../../../../domain/usecases-contracts/team/edit-team'
 import { prisma } from '../../../../main/config/prisma'
 
-export class TeamPrismaRepository implements AddTeamRepository, EditTeamRepository {
+export class TeamPrismaRepository implements AddTeamRepository, EditTeamRepository, DeleteTeamRepository {
   async add (addTeamParams: AddTeamParams): Promise<AddTeamReturn | null> {
     const teamCreated = await prisma.team.create({
       data: {
@@ -68,5 +70,13 @@ export class TeamPrismaRepository implements AddTeamRepository, EditTeamReposito
       visible: teamEdited.visible,
       team: editTeamParams.team
     }
+  }
+
+  async delete (deleteTeamParams: DeleteTeamParams): Promise<boolean> {
+    const teamExists = await prisma.team.findFirst({ where: { id: deleteTeamParams.teamId, userId: deleteTeamParams.userId } })
+    if (!teamExists) { return false }
+    await prisma.pokemon.deleteMany({ where: { teamId: deleteTeamParams.teamId } })
+    await prisma.team.delete({ where: { id: deleteTeamParams.teamId } })
+    return true
   }
 }
