@@ -2,7 +2,7 @@ import { mockAddTeamParams, mockDeleteTeamParams, mockEditTeamParams } from '../
 import { prisma } from '../../../../main/config/prisma'
 import { mockPrismaAccountToTeam } from '../../../test/prisma/account'
 import { clearDatabase } from '../../../test/prisma/clear-database'
-import { mockPrismaTeam } from '../../../test/prisma/team'
+import { mockPrismaTeam, mockPrismaTeams } from '../../../test/prisma/team'
 import { TeamPrismaRepository } from './team-prisma-repository'
 
 const makeSut = (): TeamPrismaRepository => {
@@ -22,15 +22,62 @@ describe('TeamPrismaRepository', () => {
   describe('get()', () => {
     test('Deve realizar com sucesso o método de get', async () => {
       const sut = makeSut()
-      await mockPrismaAccountToTeam()
-      await mockPrismaTeam()
-      const teamBeforeEdit = await prisma.team.findFirst({ where: { id: 'team_id' } })
-      expect(teamBeforeEdit).toBeTruthy()
+      await mockPrismaTeams()
       const team = await sut.get({
         userId: 'user_id'
       })
       expect(team).toBeTruthy()
+      expect(team?.length).toBe(2)
+    })
+    test('Deve retornar apenas todos os times visiveis de um usuário específico, acessando com um usuário diferente', async () => {
+      const sut = makeSut()
+      await mockPrismaTeams()
+      const team = await sut.get({
+        userId: 'user_id',
+        searchUserId: 'other_user_id'
+      })
+      expect(team).toBeTruthy()
       expect(team?.length).toBe(1)
+    })
+    test('Deve retornar todos os times, independentes da visibilidade, se for especificado um usuário específico, acessando com o mesmo', async () => {
+      const sut = makeSut()
+      await mockPrismaTeams()
+      const team = await sut.get({
+        userId: 'other_user_id',
+        searchUserId: 'other_user_id'
+      })
+      expect(team).toBeTruthy()
+      expect(team?.length).toBe(2)
+    })
+    test('Deve retornar um time especifico se o mesmo for visível para o usuário', async () => {
+      const sut = makeSut()
+      await mockPrismaTeams()
+      const team = await sut.get({
+        userId: 'user_id',
+        id: 'other_team_id'
+      })
+      expect(team).toBeTruthy()
+      expect(team?.length).toBe(1)
+    })
+    test('Deve retornar um time especifico se o mesmo não for visível, mas o usuário é criador', async () => {
+      const sut = makeSut()
+      await mockPrismaTeams()
+      const team = await sut.get({
+        userId: 'other_user_id',
+        id: 'third_team_id'
+      })
+      expect(team).toBeTruthy()
+      expect(team?.length).toBe(1)
+    })
+    test('Não deve retornar um time especifico se o mesmo não for visível para o usuário', async () => {
+      const sut = makeSut()
+      await mockPrismaTeams()
+      const team = await sut.get({
+        userId: 'user_id',
+        id: 'third_team_id'
+      })
+      expect(team).toBeTruthy()
+      expect(team?.length).toBe(0)
     })
   })
   describe('add()', () => {

@@ -10,7 +10,6 @@ import { prisma } from '../../../../main/config/prisma'
 
 export class TeamPrismaRepository implements GetTeamRepository, AddTeamRepository, EditTeamRepository, DeleteTeamRepository {
   async get (getTeamParams: GetTeamParams): Promise<GetTeamReturn | null> {
-    console.log(getTeamParams)
     const pokemonTeams = await prisma.team.findMany({
       where:
       {
