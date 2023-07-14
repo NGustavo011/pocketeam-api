@@ -36,6 +36,8 @@ export class TeamPrismaRepository implements AddTeamRepository, EditTeamReposito
   }
 
   async edit (editTeamParams: EditTeamParams): Promise<EditTeamReturn | null> {
+    const teamExists = await prisma.team.findFirst({ where: { id: editTeamParams.teamId, userId: editTeamParams.userId } })
+    if (!teamExists) { return null }
     await prisma.pokemon.deleteMany({ where: { teamId: editTeamParams.teamId } })
     const teamEdited = await prisma.team.update({
       data: {
