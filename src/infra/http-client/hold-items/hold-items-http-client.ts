@@ -1,6 +1,6 @@
 import { type GetHoldItemsRepository } from '../../../data/repositories-contracts/hold-items/get-hold-items-repository'
 import { type HoldItemModel } from '../../../domain/models/hold-item'
-import { type HttpClient } from '../adapters/http-client'
+import { type HttpClient } from '../contract/http-client'
 
 export class HoldItemsHttpClient implements GetHoldItemsRepository {
   constructor (private readonly httpClient: HttpClient) {

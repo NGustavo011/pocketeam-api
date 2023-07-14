@@ -6,7 +6,8 @@ export default {
     '!<rootDir>/src/main/**',
     '!**/test/**',
     '!**/domain/**',
-    '!**/*-contracts/**'
+    '!**/*-contracts/**',
+    '!**/contract/**'
   ],
   coverageDirectory: 'coverage',
   coverageProvider: 'v8',
