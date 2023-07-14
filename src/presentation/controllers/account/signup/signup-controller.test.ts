@@ -3,8 +3,8 @@ import { type AddAccountContract } from '../../../../domain/usecases-contracts/a
 import { mockValidation } from '../../../../validation/test/mock-validation'
 import { type HttpRequest } from '../../../contracts/http'
 import { type Validation } from '../../../contracts/validation'
-import { EmailInUseError, ServerError } from '../../../errors'
-import { forbidden, serverError } from '../../../helpers/http/http-helper'
+import { EmailInUseError, MissingParamError, ServerError } from '../../../errors'
+import { badRequest, forbidden, serverError } from '../../../helpers/http/http-helper'
 import { mockAddAccount } from '../../../test/mock-account'
 import { SignUpController } from './signup-controller'
 
@@ -67,5 +67,11 @@ describe('SignUp Controller', () => {
       await sut.handle(httpRequest)
       expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
     })
+  })
+  test('Retorne status 400 se o Validation retornar um erro', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new MissingParamError('any_field'))
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('any_field')))
   })
 })
