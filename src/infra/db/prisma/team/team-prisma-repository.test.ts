@@ -19,6 +19,20 @@ describe('TeamPrismaRepository', () => {
   beforeEach(async () => {
     await clearDatabase()
   })
+  describe('get()', () => {
+    test('Deve realizar com sucesso o método de get', async () => {
+      const sut = makeSut()
+      await mockPrismaAccountToTeam()
+      await mockPrismaTeam()
+      const teamBeforeEdit = await prisma.team.findFirst({ where: { id: 'team_id' } })
+      expect(teamBeforeEdit).toBeTruthy()
+      const team = await sut.get({
+        userId: 'user_id'
+      })
+      expect(team).toBeTruthy()
+      expect(team?.length).toBe(1)
+    })
+  })
   describe('add()', () => {
     test('Deve realizar com sucesso o método de add', async () => {
       const sut = makeSut()

@@ -41,6 +41,6 @@ describe('GetTeam usecase', () => {
   test('Deve retornar um GetTeamReturn com sucesso', async () => {
     const { sut } = makeSut()
     const team = await sut.get(mockGetTeamParams())
-    expect(team).toEqual(mockPokemonTeamModel())
+    expect(team).toEqual([mockPokemonTeamModel()])
   })
 })

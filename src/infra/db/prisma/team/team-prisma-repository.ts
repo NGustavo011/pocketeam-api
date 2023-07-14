@@ -1,12 +1,66 @@
 import { type AddTeamRepository } from '../../../../data/repositories-contracts/team/add-team-repository'
 import { type DeleteTeamRepository } from '../../../../data/repositories-contracts/team/delete-team-repository'
 import { type EditTeamRepository } from '../../../../data/repositories-contracts/team/edit-team-repository'
+import { type GetTeamRepository } from '../../../../data/repositories-contracts/team/get-team-repository'
 import { type AddTeamReturn, type AddTeamParams } from '../../../../domain/usecases-contracts/team/add-team'
 import { type DeleteTeamParams } from '../../../../domain/usecases-contracts/team/delete-team'
 import { type EditTeamParams, type EditTeamReturn } from '../../../../domain/usecases-contracts/team/edit-team'
+import { type GetTeamReturn, type GetTeamParams } from '../../../../domain/usecases-contracts/team/get-team'
 import { prisma } from '../../../../main/config/prisma'
 
-export class TeamPrismaRepository implements AddTeamRepository, EditTeamRepository, DeleteTeamRepository {
+export class TeamPrismaRepository implements GetTeamRepository, AddTeamRepository, EditTeamRepository, DeleteTeamRepository {
+  async get (getTeamParams: GetTeamParams): Promise<GetTeamReturn | null> {
+    console.log(getTeamParams)
+    const pokemonTeams = await prisma.team.findMany({
+      where:
+      {
+        AND: [
+          {
+            OR: [
+              {
+                visible: true
+              },
+              {
+                userId: getTeamParams.userId
+              }
+            ]
+          },
+          {
+            id: getTeamParams.id
+          },
+          {
+            userId: getTeamParams.searchUserId
+          }
+        ]
+
+      },
+      select: {
+        id: true,
+        team: true,
+        userId: true
+      }
+    })
+    const pokemonTeamsFormated = pokemonTeams.map((pokemonTeam) => {
+      return {
+        id: pokemonTeam.id,
+        userId: pokemonTeam.userId,
+        team: pokemonTeam.team.map((pokemon) => {
+          return {
+            pokemon: {
+              name: pokemon.name,
+              ability: pokemon.ability,
+              holdItem: pokemon.holdItem,
+              moves: pokemon.moves.map(move => {
+                return { name: move }
+              })
+            }
+          }
+        })
+      }
+    })
+    return pokemonTeamsFormated
+  }
+
   async add (addTeamParams: AddTeamParams): Promise<AddTeamReturn | null> {
     const teamCreated = await prisma.team.create({
       data: {
