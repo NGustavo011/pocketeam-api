@@ -1,5 +1,6 @@
 import { mockAddAccountParams } from '../../../../data/test/mock-db-account'
 import { prisma } from '../../../../main/config/prisma'
+import { clearDatabase } from '../../../test/prisma/clear-database'
 import { AccountPrismaRepository } from './account-prisma-repository'
 
 const makeSut = (): AccountPrismaRepository => {
@@ -14,7 +15,7 @@ describe('AccountPrismaRepository', () => {
     await prisma.$disconnect()
   })
   beforeEach(async () => {
-    await prisma.account.deleteMany({})
+    await clearDatabase()
   })
   describe('add()', () => {
     test('Deve retornar uma conta em caso de sucesso no método de add', async () => {
