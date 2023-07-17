@@ -1,3 +1,4 @@
+import { mockPokemonTeamModel } from '../../../../data/test/mock-team'
 import { throwError } from '../../../../domain/test/test-helpers'
 import { type ValidateTokenContract } from '../../../../domain/usecases-contracts/account/validate-token'
 import { type GetTeamContract } from '../../../../domain/usecases-contracts/team/get-team'
@@ -5,7 +6,7 @@ import { mockValidation } from '../../../../validation/test/mock-validation'
 import { type HttpRequest } from '../../../contracts/http'
 import { type Validation } from '../../../contracts/validation'
 import { MissingParamError } from '../../../errors'
-import { badRequest, serverError, unauthorized } from '../../../helpers/http/http-helper'
+import { badRequest, ok, serverError, unauthorized } from '../../../helpers/http/http-helper'
 import { mockValidateToken } from '../../../test/mock-account'
 import { mockGetTeam } from '../../../test/mock-team'
 import { GetTeamController } from './get-team-controller'
@@ -88,5 +89,10 @@ describe('GetTeam Controller', () => {
       const httpResponse = await sut.execute(mockRequest())
       expect(httpResponse).toEqual(serverError(new Error()))
     })
+  })
+  test('Retorne status 200 se o dado provido for válido', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.execute(mockRequest())
+    expect(httpResponse).toEqual(ok([mockPokemonTeamModel()]))
   })
 })
