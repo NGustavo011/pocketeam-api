@@ -1,6 +1,7 @@
 import { mockAddTeamReturn, mockEditTeamReturn } from '../../data/test/mock-team'
 import { type TeamModel } from '../../domain/models/team'
 import { type AddTeamParams, type AddTeamContract, type AddTeamReturn } from '../../domain/usecases-contracts/team/add-team'
+import { type DeleteTeamContract, type DeleteTeamParams } from '../../domain/usecases-contracts/team/delete-team'
 import { type EditTeamContract, type EditTeamParams } from '../../domain/usecases-contracts/team/edit-team'
 
 export const mockAddTeam = (): AddTeamContract => {
@@ -19,4 +20,13 @@ export const mockEditTeam = (): EditTeamContract => {
     }
   }
   return new EditTeamStub()
+}
+
+export const mockDeleteTeam = (): DeleteTeamContract => {
+  class DeleteTeamStub implements DeleteTeamContract {
+    async delete (deleteTeamParams: DeleteTeamParams): Promise<void> {
+      await Promise.resolve()
+    }
+  }
+  return new DeleteTeamStub()
 }
