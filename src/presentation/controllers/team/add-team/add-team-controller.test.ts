@@ -1,8 +1,10 @@
+import { type ValidateTokenContract } from '../../../../domain/usecases-contracts/account/validate-token'
 import { mockValidation } from '../../../../validation/test/mock-validation'
 import { type HttpRequest } from '../../../contracts/http'
 import { type Validation } from '../../../contracts/validation'
 import { MissingParamError } from '../../../errors'
-import { badRequest } from '../../../helpers/http/http-helper'
+import { badRequest, unauthorized } from '../../../helpers/http/http-helper'
+import { mockValidateToken } from '../../../test/mock-account'
 import { AddTeamController } from './add-team-controller'
 
 const mockRequest = (): HttpRequest => {
@@ -50,14 +52,17 @@ const mockRequest = (): HttpRequest => {
 
 interface SutTypes {
   validationStub: Validation
+  validateTokenStub: ValidateTokenContract
   sut: AddTeamController
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = mockValidation()
-  const sut = new AddTeamController(validationStub)
+  const validateTokenStub = mockValidateToken()
+  const sut = new AddTeamController(validationStub, validateTokenStub)
   return {
     validationStub,
+    validateTokenStub,
     sut
   }
 }
@@ -77,6 +82,21 @@ describe('AddTeam Controller', () => {
       jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new MissingParamError('any_field'))
       const httpResponse = await sut.execute(mockRequest())
       expect(httpResponse).toEqual(badRequest(new MissingParamError('any_field')))
+    })
+  })
+  describe('ValidateToken dependency', () => {
+    test('Deve chamar o ValidateToken com valores corretos', async () => {
+      const { sut, validateTokenStub } = makeSut()
+      const validateTokenSpy = jest.spyOn(validateTokenStub, 'validateToken')
+      const httpRequest = mockRequest()
+      await sut.execute(httpRequest)
+      expect(validateTokenSpy).toHaveBeenCalledWith(httpRequest.headers.Authorization)
+    })
+    test('Retorne status 401 se o ValidateToken retornar um falso', async () => {
+      const { sut, validateTokenStub } = makeSut()
+      jest.spyOn(validateTokenStub, 'validateToken').mockReturnValueOnce(Promise.resolve(false))
+      const httpResponse = await sut.execute(mockRequest())
+      expect(httpResponse).toEqual(unauthorized())
     })
   })
 })
