@@ -5,7 +5,7 @@ import { mockValidation } from '../../../../validation/test/mock-validation'
 import { type HttpRequest } from '../../../contracts/http'
 import { type Validation } from '../../../contracts/validation'
 import { MissingParamError } from '../../../errors'
-import { badRequest, serverError, unauthorized } from '../../../helpers/http/http-helper'
+import { badRequest, noContent, serverError, unauthorized } from '../../../helpers/http/http-helper'
 import { mockValidateToken } from '../../../test/mock-account'
 import { mockDeleteTeam } from '../../../test/mock-team'
 import { DeleteTeamController } from './delete-team-controller'
@@ -88,5 +88,10 @@ describe('DeleteTeam Controller', () => {
       const httpResponse = await sut.execute(mockRequest())
       expect(httpResponse).toEqual(serverError(new Error()))
     })
+  })
+  test('Retorne status 204 se o dado provido for válido', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.execute(mockRequest())
+    expect(httpResponse).toEqual(noContent())
   })
 })
