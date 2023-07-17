@@ -17,6 +17,8 @@ export class LoginController extends Controller {
     if (error) {
       return badRequest(error)
     }
+    const { email, password } = httpRequest.body
+    await this.authentication.auth({ email, password })
     return {
       body: {},
       statusCode: 0
