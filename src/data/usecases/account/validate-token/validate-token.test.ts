@@ -31,16 +31,16 @@ describe('ValidateToken usecase', () => {
       const promise = sut.validateToken(mockToken())
       await expect(promise).rejects.toThrow()
     })
-    test('Deve retornar false caso DecrypterRepository retorne false', async () => {
+    test('Deve retornar null caso DecrypterRepository retorne null', async () => {
       const { sut, decrypterRepositoryStub } = makeSut()
-      jest.spyOn(decrypterRepositoryStub, 'validateToken').mockReturnValueOnce(Promise.resolve(false))
-      const isValidToken = await sut.validateToken(mockToken())
-      expect(isValidToken).toBeFalsy()
+      jest.spyOn(decrypterRepositoryStub, 'validateToken').mockReturnValueOnce(Promise.resolve(null))
+      const payload = await sut.validateToken(mockToken())
+      expect(payload).toBeNull()
     })
   })
   test('Deve retornar true em caso de sucesso', async () => {
     const { sut } = makeSut()
-    const isValidToken = await sut.validateToken(mockToken())
-    expect(isValidToken).toBeTruthy()
+    const payload = await sut.validateToken(mockToken())
+    expect(payload).toEqual({ userId: 'any_user_id' })
   })
 })

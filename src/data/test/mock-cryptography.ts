@@ -1,3 +1,4 @@
+import { type DecrypterPayload } from '../../domain/usecases-contracts/account/validate-token'
 import { type DecrypterRepository } from '../repositories-contracts/cryptography/decrypter-repository'
 import { type EncrypterRepository } from '../repositories-contracts/cryptography/encrypter-repository'
 import { type HashComparerRepository } from '../repositories-contracts/cryptography/hash-comparer-repository'
@@ -36,8 +37,8 @@ export const mockToken = (): string => {
 
 export const mockDecrypterRepository = (): DecrypterRepository => {
   class DecrypterRepositoryStub implements DecrypterRepository {
-    async validateToken (token: string): Promise<boolean> {
-      return await Promise.resolve(true)
+    async validateToken (token: string): Promise<DecrypterPayload | null> {
+      return await Promise.resolve({ userId: 'any_user_id' })
     }
   }
   return new DecrypterRepositoryStub()

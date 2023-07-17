@@ -1,10 +1,13 @@
+import { throwError } from '../../../../domain/test/test-helpers'
 import { type ValidateTokenContract } from '../../../../domain/usecases-contracts/account/validate-token'
+import { type AddTeamContract } from '../../../../domain/usecases-contracts/team/add-team'
 import { mockValidation } from '../../../../validation/test/mock-validation'
 import { type HttpRequest } from '../../../contracts/http'
 import { type Validation } from '../../../contracts/validation'
 import { MissingParamError } from '../../../errors'
-import { badRequest, unauthorized } from '../../../helpers/http/http-helper'
+import { badRequest, serverError, unauthorized } from '../../../helpers/http/http-helper'
 import { mockValidateToken } from '../../../test/mock-account'
+import { mockAddTeam } from '../../../test/mock-team'
 import { AddTeamController } from './add-team-controller'
 
 const mockRequest = (): HttpRequest => {
@@ -53,16 +56,19 @@ const mockRequest = (): HttpRequest => {
 interface SutTypes {
   validationStub: Validation
   validateTokenStub: ValidateTokenContract
+  addTeamStub: AddTeamContract
   sut: AddTeamController
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = mockValidation()
   const validateTokenStub = mockValidateToken()
-  const sut = new AddTeamController(validationStub, validateTokenStub)
+  const addTeamStub = mockAddTeam()
+  const sut = new AddTeamController(validationStub, validateTokenStub, addTeamStub)
   return {
     validationStub,
     validateTokenStub,
+    addTeamStub,
     sut
   }
 }
@@ -92,11 +98,29 @@ describe('AddTeam Controller', () => {
       await sut.execute(httpRequest)
       expect(validateTokenSpy).toHaveBeenCalledWith(httpRequest.headers.Authorization)
     })
-    test('Retorne status 401 se o ValidateToken retornar um falso', async () => {
+    test('Retorne status 401 se o ValidateToken retornar null', async () => {
       const { sut, validateTokenStub } = makeSut()
-      jest.spyOn(validateTokenStub, 'validateToken').mockReturnValueOnce(Promise.resolve(false))
+      jest.spyOn(validateTokenStub, 'validateToken').mockReturnValueOnce(Promise.resolve(null))
       const httpResponse = await sut.execute(mockRequest())
       expect(httpResponse).toEqual(unauthorized())
+    })
+  })
+  describe('AddTeam dependency', () => {
+    test('Deve chamar AddTeam com valores corretos', async () => {
+      const { sut, addTeamStub } = makeSut()
+      const getSpy = jest.spyOn(addTeamStub, 'add')
+      await sut.execute(mockRequest())
+      expect(getSpy).toHaveBeenCalledWith({
+        team: mockRequest().body.team,
+        visible: mockRequest().body.visible,
+        userId: 'any_user_id'
+      })
+    })
+    test('Deve retornar 500 se AddTeam lançar uma exceção', async () => {
+      const { sut, addTeamStub } = makeSut()
+      jest.spyOn(addTeamStub, 'add').mockImplementationOnce(throwError)
+      const httpResponse = await sut.execute(mockRequest())
+      expect(httpResponse).toEqual(serverError(new Error()))
     })
   })
 })

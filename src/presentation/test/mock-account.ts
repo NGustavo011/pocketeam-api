@@ -3,7 +3,7 @@ import { type AccountModel } from '../../domain/models/account'
 import { type AuthenticationModel } from '../../domain/models/authentication'
 import { type AddAccountContract, type AddAccountParams } from '../../domain/usecases-contracts/account/add-account'
 import { type AuthenticationParams, type AuthenticationContract } from '../../domain/usecases-contracts/account/authentication'
-import { type ValidateTokenContract } from '../../domain/usecases-contracts/account/validate-token'
+import { type DecrypterPayload, type ValidateTokenContract } from '../../domain/usecases-contracts/account/validate-token'
 
 export const mockAddAccount = (): AddAccountContract => {
   class AddAccountStub implements AddAccountContract {
@@ -25,8 +25,8 @@ export const mockAuthentication = (): AuthenticationContract => {
 
 export const mockValidateToken = (): ValidateTokenContract => {
   class ValidateTokenStub implements ValidateTokenContract {
-    async validateToken (token: string): Promise<boolean> {
-      return await new Promise(resolve => { resolve(true) })
+    async validateToken (token: string): Promise<DecrypterPayload | null> {
+      return await Promise.resolve({ userId: 'any_user_id' })
     }
   }
   return new ValidateTokenStub()
