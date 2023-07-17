@@ -2,7 +2,7 @@ import { type HoldItemModel } from '../../domain/models/hold-item'
 import { type GetHoldItemsContract } from '../../domain/usecases-contracts/hold-item/get-hold-items'
 
 export const mockGetHoldItems = (): GetHoldItemsContract => {
-  class GetHoldItemsContractStub implements GetHoldItemsContract {
+  class GetHoldItemsStub implements GetHoldItemsContract {
     async get (): Promise<HoldItemModel[] | null> {
       return await Promise.resolve(
         [
@@ -19,5 +19,5 @@ export const mockGetHoldItems = (): GetHoldItemsContract => {
       )
     }
   }
-  return new GetHoldItemsContractStub()
+  return new GetHoldItemsStub()
 }
