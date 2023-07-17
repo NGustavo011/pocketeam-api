@@ -2,7 +2,7 @@ import { throwError } from '../../../../domain/test/test-helpers'
 import { type GetAllPokemonContract } from '../../../../domain/usecases-contracts/pokemon/get-all-pokemon'
 import { type HttpRequest } from '../../../contracts/http'
 import { ServerError } from '../../../errors'
-import { serverError } from '../../../helpers/http/http-helper'
+import { ok, serverError } from '../../../helpers/http/http-helper'
 import { mockGetAllPokemon } from '../../../test/mock-pokemon'
 import { GetAllPokemonController } from './get-all-pokemon-controller'
 
@@ -39,5 +39,10 @@ describe('GetAllPokemon Controller', () => {
       const httpResponse = await sut.execute(mockRequest())
       expect(httpResponse).toEqual(serverError(new ServerError()))
     })
+  })
+  test('Retorne status 200 se o dado provido for válido', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.execute(mockRequest())
+    expect(httpResponse).toEqual(ok(await mockGetAllPokemon().getAll()))
   })
 })
