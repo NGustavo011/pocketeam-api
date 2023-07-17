@@ -3,7 +3,7 @@ import { mockValidation } from '../../../../validation/test/mock-validation'
 import { type HttpRequest } from '../../../contracts/http'
 import { type Validation } from '../../../contracts/validation'
 import { MissingParamError } from '../../../errors'
-import { badRequest, serverError } from '../../../helpers/http/http-helper'
+import { badRequest, ok, serverError } from '../../../helpers/http/http-helper'
 import { mockAuthentication } from '../../../test/mock-account'
 import { LoginController } from './login-controller'
 
@@ -67,5 +67,10 @@ describe('Login Controller', () => {
       const httpResponse = await sut.execute(mockRequest())
       expect(httpResponse).toEqual(serverError(new Error()))
     })
+  })
+  test('Retorne status 200 se o dado provido for válido', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.execute(mockRequest())
+    expect(httpResponse).toEqual(ok({ token: 'any_token', name: 'any_name' }))
   })
 })
