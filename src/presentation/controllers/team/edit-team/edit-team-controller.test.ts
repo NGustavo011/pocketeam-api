@@ -1,10 +1,11 @@
+import { throwError } from '../../../../domain/test/test-helpers'
 import { type ValidateTokenContract } from '../../../../domain/usecases-contracts/account/validate-token'
 import { type EditTeamContract } from '../../../../domain/usecases-contracts/team/edit-team'
 import { mockValidation } from '../../../../validation/test/mock-validation'
 import { type HttpRequest } from '../../../contracts/http'
 import { type Validation } from '../../../contracts/validation'
 import { MissingParamError } from '../../../errors'
-import { badRequest, unauthorized } from '../../../helpers/http/http-helper'
+import { badRequest, serverError, unauthorized } from '../../../helpers/http/http-helper'
 import { mockValidateToken } from '../../../test/mock-account'
 import { mockEditTeam } from '../../../test/mock-team'
 import { EditTeamController } from './edit-team-controller'
@@ -104,6 +105,25 @@ describe('EditTeam Controller', () => {
       jest.spyOn(validateTokenStub, 'validateToken').mockReturnValueOnce(Promise.resolve(null))
       const httpResponse = await sut.execute(mockRequest())
       expect(httpResponse).toEqual(unauthorized())
+    })
+  })
+  describe('EditTeam dependency', () => {
+    test('Deve chamar EditTeam com valores corretos', async () => {
+      const { sut, editTeamStub } = makeSut()
+      const getSpy = jest.spyOn(editTeamStub, 'edit')
+      await sut.execute(mockRequest())
+      expect(getSpy).toHaveBeenCalledWith({
+        team: mockRequest().body.team,
+        visible: mockRequest().body.visible,
+        teamId: mockRequest().params.teamId,
+        userId: 'any_user_id'
+      })
+    })
+    test('Deve retornar 500 se EditTeam lançar uma exceção', async () => {
+      const { sut, editTeamStub } = makeSut()
+      jest.spyOn(editTeamStub, 'edit').mockImplementationOnce(throwError)
+      const httpResponse = await sut.execute(mockRequest())
+      expect(httpResponse).toEqual(serverError(new Error()))
     })
   })
 })
