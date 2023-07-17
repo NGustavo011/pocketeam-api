@@ -2,7 +2,7 @@ import { throwError } from '../../../../domain/test/test-helpers'
 import { type GetHoldItemsContract } from '../../../../domain/usecases-contracts/hold-item/get-hold-items'
 import { type HttpRequest } from '../../../contracts/http'
 import { ServerError } from '../../../errors'
-import { serverError } from '../../../helpers/http/http-helper'
+import { ok, serverError } from '../../../helpers/http/http-helper'
 import { mockGetHoldItems } from '../../../test/mock-hold-items'
 import { GetHoldItemsController } from './get-hold-items-controller'
 
@@ -39,5 +39,10 @@ describe('GetHoldItems Controller', () => {
       const httpResponse = await sut.execute(mockRequest())
       expect(httpResponse).toEqual(serverError(new ServerError()))
     })
+  })
+  test('Retorne status 200 se o dado provido for válido', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.execute(mockRequest())
+    expect(httpResponse).toEqual(ok(await mockGetHoldItems().get()))
   })
 })

@@ -1,6 +1,7 @@
 import { type GetHoldItemsContract } from '../../../../domain/usecases-contracts/hold-item/get-hold-items'
 import { Controller } from '../../../contracts/controller'
 import { type HttpRequest, type HttpResponse } from '../../../contracts/http'
+import { ok } from '../../../helpers/http/http-helper'
 
 export class GetHoldItemsController extends Controller {
   constructor (
@@ -10,10 +11,7 @@ export class GetHoldItemsController extends Controller {
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    await this.getHoldItems.get()
-    return {
-      body: {},
-      statusCode: 0
-    }
+    const holdItems = await this.getHoldItems.get()
+    return ok(holdItems)
   }
 }
