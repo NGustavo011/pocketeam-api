@@ -1,3 +1,4 @@
+import { type DecrypterRepository } from '../repositories-contracts/cryptography/decrypter-repository'
 import { type EncrypterRepository } from '../repositories-contracts/cryptography/encrypter-repository'
 import { type HashComparerRepository } from '../repositories-contracts/cryptography/hash-comparer-repository'
 import { type HasherRepository } from '../repositories-contracts/cryptography/hasher-repository'
@@ -27,4 +28,17 @@ export const mockEncrypterRepository = (): EncrypterRepository => {
     }
   }
   return new EncrypterRepositoryStub()
+}
+
+export const mockToken = (): string => {
+  return 'valid_token'
+}
+
+export const mockDecrypterRepository = (): DecrypterRepository => {
+  class DecrypterRepositoryStub implements DecrypterRepository {
+    async validateToken (token: string): Promise<boolean> {
+      return await Promise.resolve(true)
+    }
+  }
+  return new DecrypterRepositoryStub()
 }
