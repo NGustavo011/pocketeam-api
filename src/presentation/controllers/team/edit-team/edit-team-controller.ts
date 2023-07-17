@@ -3,7 +3,7 @@ import { type EditTeamContract } from '../../../../domain/usecases-contracts/tea
 import { Controller } from '../../../contracts/controller'
 import { type HttpRequest, type HttpResponse } from '../../../contracts/http'
 import { type Validation } from '../../../contracts/validation'
-import { badRequest, noContent, unauthorized } from '../../../helpers/http/http-helper'
+import { badRequest, ok, unauthorized } from '../../../helpers/http/http-helper'
 
 export class EditTeamController extends Controller {
   constructor (
@@ -26,12 +26,12 @@ export class EditTeamController extends Controller {
     }
     const { team, visible } = httpRequest.body
     const { teamId } = httpRequest.params
-    await this.editTeam.edit({
+    const teamModel = await this.editTeam.edit({
       team,
       visible,
       userId: payload.userId,
       teamId
     })
-    return noContent()
+    return ok(teamModel)
   }
 }
