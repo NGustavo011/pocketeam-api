@@ -5,7 +5,7 @@ import { mockValidation } from '../../../../validation/test/mock-validation'
 import { type HttpRequest } from '../../../contracts/http'
 import { type Validation } from '../../../contracts/validation'
 import { MissingParamError } from '../../../errors'
-import { badRequest, serverError, unauthorized } from '../../../helpers/http/http-helper'
+import { badRequest, noContent, serverError, unauthorized } from '../../../helpers/http/http-helper'
 import { mockValidateToken } from '../../../test/mock-account'
 import { mockAddTeam } from '../../../test/mock-team'
 import { AddTeamController } from './add-team-controller'
@@ -80,8 +80,7 @@ describe('AddTeam Controller', () => {
       const validateSpy = jest.spyOn(validationStub, 'validate')
       const httpRequest = mockRequest()
       await sut.execute(httpRequest)
-      expect(validateSpy).toHaveBeenCalledTimes(2)
-      expect(validateSpy).toHaveBeenLastCalledWith(httpRequest.headers)
+      expect(validateSpy).toHaveBeenLastCalledWith(Object.assign({}, httpRequest.headers, httpRequest.body))
     })
     test('Retorne status 400 se o Validation retornar um erro', async () => {
       const { sut, validationStub } = makeSut()
@@ -122,5 +121,10 @@ describe('AddTeam Controller', () => {
       const httpResponse = await sut.execute(mockRequest())
       expect(httpResponse).toEqual(serverError(new Error()))
     })
+  })
+  test('Retorne status 204 se o dado provido for válido', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.execute(mockRequest())
+    expect(httpResponse).toEqual(noContent())
   })
 })

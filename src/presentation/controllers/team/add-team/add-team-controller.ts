@@ -3,7 +3,7 @@ import { type AddTeamContract } from '../../../../domain/usecases-contracts/team
 import { Controller } from '../../../contracts/controller'
 import { type HttpRequest, type HttpResponse } from '../../../contracts/http'
 import { type Validation } from '../../../contracts/validation'
-import { badRequest, unauthorized } from '../../../helpers/http/http-helper'
+import { badRequest, noContent, unauthorized } from '../../../helpers/http/http-helper'
 
 export class AddTeamController extends Controller {
   constructor (
@@ -15,9 +15,8 @@ export class AddTeamController extends Controller {
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    const errorBody = this.validation.validate(httpRequest.body)
-    const errorHeaders = this.validation.validate(httpRequest.headers)
-    const error = errorBody ?? errorHeaders
+    console.log(Object.assign({}, httpRequest.headers, httpRequest.body))
+    const error = this.validation.validate(Object.assign({}, httpRequest.headers, httpRequest.body))
     if (error) {
       return badRequest(error)
     }
@@ -32,9 +31,6 @@ export class AddTeamController extends Controller {
       visible,
       userId: payload.userId
     })
-    return {
-      body: {},
-      statusCode: 0
-    }
+    return noContent()
   }
 }
