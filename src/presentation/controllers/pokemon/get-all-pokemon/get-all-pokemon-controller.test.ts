@@ -33,7 +33,7 @@ describe('GetAllPokemon Controller', () => {
       await sut.execute(mockRequest())
       expect(getAllSpy).toHaveBeenCalled()
     })
-    test('Retorne status de erro 500 se o execute lançar um erro', async () => {
+    test('Retorne status de erro 500 se o GetAllPokemon lançar um erro', async () => {
       const { sut, getAllPokemonStub } = makeSut()
       jest.spyOn(getAllPokemonStub, 'getAll').mockImplementationOnce(throwError)
       const httpResponse = await sut.execute(mockRequest())

@@ -33,7 +33,7 @@ describe('GetHoldItems Controller', () => {
       await sut.execute(mockRequest())
       expect(getSpy).toHaveBeenCalled()
     })
-    test('Retorne status de erro 500 se o execute lançar um erro', async () => {
+    test('Retorne status de erro 500 se o GetHoldItems lançar um erro', async () => {
       const { sut, getHoldItemsStub } = makeSut()
       jest.spyOn(getHoldItemsStub, 'get').mockImplementationOnce(throwError)
       const httpResponse = await sut.execute(mockRequest())
