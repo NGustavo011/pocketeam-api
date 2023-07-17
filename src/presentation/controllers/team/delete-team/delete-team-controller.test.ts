@@ -1,10 +1,11 @@
+import { throwError } from '../../../../domain/test/test-helpers'
 import { type ValidateTokenContract } from '../../../../domain/usecases-contracts/account/validate-token'
 import { type DeleteTeamContract } from '../../../../domain/usecases-contracts/team/delete-team'
 import { mockValidation } from '../../../../validation/test/mock-validation'
 import { type HttpRequest } from '../../../contracts/http'
 import { type Validation } from '../../../contracts/validation'
 import { MissingParamError } from '../../../errors'
-import { badRequest, unauthorized } from '../../../helpers/http/http-helper'
+import { badRequest, serverError, unauthorized } from '../../../helpers/http/http-helper'
 import { mockValidateToken } from '../../../test/mock-account'
 import { mockDeleteTeam } from '../../../test/mock-team'
 import { DeleteTeamController } from './delete-team-controller'
@@ -69,6 +70,23 @@ describe('DeleteTeam Controller', () => {
       jest.spyOn(validateTokenStub, 'validateToken').mockReturnValueOnce(Promise.resolve(null))
       const httpResponse = await sut.execute(mockRequest())
       expect(httpResponse).toEqual(unauthorized())
+    })
+  })
+  describe('DeleteTeam dependency', () => {
+    test('Deve chamar DeleteTeam com valores corretos', async () => {
+      const { sut, deleteTeamStub } = makeSut()
+      const getSpy = jest.spyOn(deleteTeamStub, 'delete')
+      await sut.execute(mockRequest())
+      expect(getSpy).toHaveBeenCalledWith({
+        teamId: mockRequest().params.teamId,
+        userId: 'any_user_id'
+      })
+    })
+    test('Deve retornar 500 se DeleteTeam lançar uma exceção', async () => {
+      const { sut, deleteTeamStub } = makeSut()
+      jest.spyOn(deleteTeamStub, 'delete').mockImplementationOnce(throwError)
+      const httpResponse = await sut.execute(mockRequest())
+      expect(httpResponse).toEqual(serverError(new Error()))
     })
   })
 })
