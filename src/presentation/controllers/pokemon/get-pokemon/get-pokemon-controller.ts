@@ -2,7 +2,7 @@ import { type GetPokemonContract } from '../../../../domain/usecases-contracts/p
 import { Controller } from '../../../contracts/controller'
 import { type HttpRequest, type HttpResponse } from '../../../contracts/http'
 import { type Validation } from '../../../contracts/validation'
-import { badRequest } from '../../../helpers/http/http-helper'
+import { badRequest, ok } from '../../../helpers/http/http-helper'
 
 export class GetPokemonController extends Controller {
   constructor (
@@ -18,10 +18,7 @@ export class GetPokemonController extends Controller {
       return badRequest(error)
     }
     const { pokemonName } = httpRequest.params
-    await this.getPokemon.get(pokemonName)
-    return {
-      body: {},
-      statusCode: 0
-    }
+    const pokemon = await this.getPokemon.get(pokemonName)
+    return ok(pokemon)
   }
 }
