@@ -3,7 +3,7 @@ import { LoginController } from '../../../../../presentation/controllers/account
 import { makeAuthentication } from '../../../usecases/account/authentication/authentication-factory'
 import { makeLoginValidation } from './login-validation-factory'
 
-export const makeLoginControllerFactory = (): Controller => {
+export const makeLoginController = (): Controller => {
   const controller = new LoginController(makeLoginValidation(), makeAuthentication())
   return controller
 }
