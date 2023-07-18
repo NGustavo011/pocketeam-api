@@ -1,8 +1,8 @@
 import request from 'supertest'
 import { prisma } from '../../config/prisma'
 import { clearDatabase } from '../../../infra/test/prisma/clear-database'
-import { app } from '../../server'
 import { hash } from 'bcrypt'
+import { app } from '../../config/app'
 
 describe('Account Routes', () => {
   beforeAll(async () => {
