@@ -20,11 +20,11 @@ export class PokemonHttpClient implements GetAllPokemonRepository, GetPokemonRep
       const response = await this.httpClient.get(`https://pokeapi.co/api/v2/pokemon/${name}`)
       return {
         name: response.forms[0].name,
-        abilities: response.abilities.map(ability => {
-          return { name: ability.name }
+        abilities: response.abilities.map(abilityData => {
+          return { name: abilityData.ability.name }
         }),
-        moves: response.moves.map(move => {
-          return { name: move.name }
+        moves: response.moves.map(moveData => {
+          return { name: moveData.move.name }
         })
       }
     } catch (error) {
