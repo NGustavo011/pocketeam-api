@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { accountRoutes } from './account-routes'
+import { accountRoutes } from './account/account-routes'
 
 export const router = Router()
 

@@ -1,7 +1,7 @@
 import request from 'supertest'
-import { prisma } from '../config/prisma'
-import { clearDatabase } from '../../infra/test/prisma/clear-database'
-import { app } from '../server'
+import { prisma } from '../../config/prisma'
+import { clearDatabase } from '../../../infra/test/prisma/clear-database'
+import { app } from '../../server'
 
 describe('Account Routes', () => {
   beforeAll(async () => {
