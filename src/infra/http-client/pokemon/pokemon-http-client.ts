@@ -10,7 +10,7 @@ export class PokemonHttpClient implements GetAllPokemonRepository, GetPokemonRep
 
   async getAll (): Promise<AllPokemonModel> {
     const response = await this.httpClient.get('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=151')
-    return response.data.results.map((pokemon) => {
+    return response.results.map((pokemon) => {
       return { name: pokemon.name }
     })
   }
@@ -19,11 +19,11 @@ export class PokemonHttpClient implements GetAllPokemonRepository, GetPokemonRep
     try {
       const response = await this.httpClient.get(`https://pokeapi.co/api/v2/pokemon/${name}`)
       return {
-        name: response.data.forms[0].name,
-        abilities: response.data.abilities.map(ability => {
+        name: response.forms[0].name,
+        abilities: response.abilities.map(ability => {
           return { name: ability.name }
         }),
-        moves: response.data.moves.map(move => {
+        moves: response.moves.map(move => {
           return { name: move.name }
         })
       }

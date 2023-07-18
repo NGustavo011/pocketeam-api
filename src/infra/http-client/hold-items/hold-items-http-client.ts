@@ -8,7 +8,7 @@ export class HoldItemsHttpClient implements GetHoldItemsRepository {
 
   async get (): Promise<HoldItemModel[]> {
     const response = await this.httpClient.get('https://pokeapi.co/api/v2/item-attribute/holdable-active/')
-    return response.data.items.map((item) => {
+    return response.items.map((item) => {
       return { name: item.name }
     })
   }
