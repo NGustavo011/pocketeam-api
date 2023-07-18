@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { accountRoutes } from './account/account-routes'
-import { holdItemRoutes } from './hold-item/get-hold-items-routes'
-import { pokemonRoutes } from './pokemon/get-all-pokemon-routes'
+import { holdItemRoutes } from './hold-item/hold-item-routes'
+import { pokemonRoutes } from './pokemon/pokemon-routes'
 
 export const router = Router()
 
