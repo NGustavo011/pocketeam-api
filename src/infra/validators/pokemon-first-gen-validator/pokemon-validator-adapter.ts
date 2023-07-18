@@ -6,8 +6,12 @@ export class PokemonFirstGenValidatorAdapter implements PokemonFirstGenValidator
   }
 
   async isValid (pokemonName: string): Promise<boolean> {
-    const response = await this.httpClient.get(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`)
-    if (!response.data || response.data.id > 151) { return false }
+    try {
+      const response = await this.httpClient.get(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`)
+      if (response.id > 151) { return false }
+    } catch (error) {
+      return false
+    }
     return true
   }
 }

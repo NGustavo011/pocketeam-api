@@ -13,7 +13,7 @@ export class GetPokemonController extends Controller {
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    const error = this.validation.validate(httpRequest.params)
+    const error = await this.validation.validate(httpRequest.params)
     if (error) {
       return badRequest(error)
     }

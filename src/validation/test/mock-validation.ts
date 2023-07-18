@@ -8,3 +8,12 @@ export const mockValidation = (): Validation => {
   }
   return new ValidationStub()
 }
+
+export const mockValidationPromise = (): Validation => {
+  class ValidationStub implements Validation {
+    async validate (input: any): Promise<Error | null> {
+      return await Promise.resolve(null)
+    }
+  }
+  return new ValidationStub()
+}

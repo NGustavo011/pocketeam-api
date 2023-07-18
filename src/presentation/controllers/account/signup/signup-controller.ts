@@ -16,7 +16,7 @@ export class SignUpController extends Controller {
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    const error = this.validation.validate(httpRequest.body)
+    const error = await this.validation.validate(httpRequest.body)
     if (error) return badRequest(error)
     const { name, email, password } = httpRequest.body
     const account = await this.addAccount.add({

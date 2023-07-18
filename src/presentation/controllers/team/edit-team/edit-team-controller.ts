@@ -15,7 +15,7 @@ export class EditTeamController extends Controller {
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    const error = this.validation.validate(Object.assign({}, httpRequest.headers, httpRequest.body, httpRequest.params))
+    const error = await this.validation.validate(Object.assign({}, httpRequest.headers, httpRequest.body, httpRequest.params))
     if (error) {
       return badRequest(error)
     }
