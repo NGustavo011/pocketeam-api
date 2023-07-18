@@ -4,7 +4,7 @@ import { ValidationComposite } from '../../../../../validation/validators/valida
 
 export const makeAddTeamValidation = (): Validation => {
   const validations: Validation[] = []
-  for (const field of ['team', 'visible']) {
+  for (const field of ['team', 'visible', 'authorization']) {
     validations.push(new RequiredFieldValidation(field))
   }
   return new ValidationComposite(validations)

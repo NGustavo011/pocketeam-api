@@ -10,7 +10,7 @@ describe('SignUp Validation Factory', () => {
   test('Deve chamar o ValidationComposite com todas os validadores', () => {
     makeAddTeamValidation()
     const validations: Validation[] = []
-    for (const field of ['team', 'visible']) {
+    for (const field of ['team', 'visible', 'authorization']) {
       validations.push(new RequiredFieldValidation(field))
     }
     expect(ValidationComposite).toHaveBeenCalledWith(validations)

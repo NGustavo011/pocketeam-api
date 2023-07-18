@@ -19,15 +19,15 @@ export class AddTeamController extends Controller {
     if (error) {
       return badRequest(error)
     }
-    const { Authorization } = httpRequest.headers
-    const payload = await this.validateToken.validateToken(Authorization)
+    const { authorization } = httpRequest.headers
+    const payload = await this.validateToken.validateToken(authorization)
     if (!payload) {
       return unauthorized()
     }
     const { team, visible } = httpRequest.body
     await this.addTeam.add({
       team,
-      visible,
+      visible: Boolean(visible),
       userId: payload.userId
     })
     return noContent()

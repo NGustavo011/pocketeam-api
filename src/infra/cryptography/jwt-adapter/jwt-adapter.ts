@@ -14,10 +14,16 @@ export class JwtAdapter implements EncrypterRepository, DecrypterRepository {
     try {
       const decoded = jwt.verify(token, this.secret)
       return {
-        userId: await Promise.resolve(decoded) as string
+        userId: (await Promise.resolve(decoded) as JwtVerifyToken).id
       }
     } catch (error) {
       return null
     }
   }
+}
+
+export interface JwtVerifyToken {
+  id: string
+  iat: number
+  exp: number
 }

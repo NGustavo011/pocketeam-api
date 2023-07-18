@@ -19,8 +19,8 @@ export class EditTeamController extends Controller {
     if (error) {
       return badRequest(error)
     }
-    const { Authorization } = httpRequest.headers
-    const payload = await this.validateToken.validateToken(Authorization)
+    const { authorization } = httpRequest.headers
+    const payload = await this.validateToken.validateToken(authorization)
     if (!payload) {
       return unauthorized()
     }
@@ -28,7 +28,7 @@ export class EditTeamController extends Controller {
     const { teamId } = httpRequest.params
     const teamModel = await this.editTeam.edit({
       team,
-      visible,
+      visible: Boolean(visible),
       userId: payload.userId,
       teamId
     })

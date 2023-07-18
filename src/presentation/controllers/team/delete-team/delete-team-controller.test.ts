@@ -13,7 +13,7 @@ import { DeleteTeamController } from './delete-team-controller'
 const mockRequest = (): HttpRequest => {
   return {
     headers: {
-      Authorization: 'any_token'
+      authorization: 'any_token'
     },
     params: {
       teamId: 'team_id_1'
@@ -63,7 +63,7 @@ describe('DeleteTeam Controller', () => {
       const validateTokenSpy = jest.spyOn(validateTokenStub, 'validateToken')
       const httpRequest = mockRequest()
       await sut.execute(httpRequest)
-      expect(validateTokenSpy).toHaveBeenCalledWith(httpRequest.headers.Authorization)
+      expect(validateTokenSpy).toHaveBeenCalledWith(httpRequest.headers.authorization)
     })
     test('Retorne status 401 se o ValidateToken retornar null', async () => {
       const { sut, validateTokenStub } = makeSut()

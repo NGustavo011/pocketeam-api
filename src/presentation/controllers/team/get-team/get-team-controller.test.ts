@@ -14,7 +14,7 @@ import { GetTeamController } from './get-team-controller'
 const mockRequest = (): HttpRequest => {
   return {
     headers: {
-      Authorization: 'any_token'
+      authorization: 'any_token'
     },
     params: {
       userId: ''
@@ -64,7 +64,7 @@ describe('GetTeam Controller', () => {
       const validateTokenSpy = jest.spyOn(validateTokenStub, 'validateToken')
       const httpRequest = mockRequest()
       await sut.execute(httpRequest)
-      expect(validateTokenSpy).toHaveBeenCalledWith(httpRequest.headers.Authorization)
+      expect(validateTokenSpy).toHaveBeenCalledWith(httpRequest.headers.authorization)
     })
     test('Retorne status 401 se o ValidateToken retornar null', async () => {
       const { sut, validateTokenStub } = makeSut()

@@ -1,12 +1,16 @@
 import jwt from 'jsonwebtoken'
-import { JwtAdapter } from './jwt-adapter'
+import { JwtAdapter, type JwtVerifyToken } from './jwt-adapter'
 
 jest.mock('jsonwebtoken', () => ({
   sign: async (): Promise<string> => {
     return await new Promise(resolve => { resolve('any_token') })
   },
-  verify: async (): Promise<string> => {
-    return await new Promise(resolve => { resolve('any_value') })
+  verify: async (): Promise<JwtVerifyToken> => {
+    return await Promise.resolve({
+      id: 'any_value',
+      iat: 0,
+      exp: 0
+    })
   }
 }))
 
