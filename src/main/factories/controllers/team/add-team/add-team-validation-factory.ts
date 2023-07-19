@@ -1,4 +1,5 @@
 import { AxiosAdapter } from '../../../../../infra/http-client/adapters/axios/axios-adapter'
+import { AbilityValidatorAdapter } from '../../../../../infra/validators/ability-validator/ability-validator-adapter'
 import { PokemonFirstGenValidatorAdapter } from '../../../../../infra/validators/pokemon-first-gen-validator/pokemon-validator-adapter'
 import { type Validation } from '../../../../../presentation/contracts/validation'
 import { RequiredFieldValidation } from '../../../../../validation/validators/required-field-validation'
@@ -10,6 +11,10 @@ export const makeAddTeamValidation = (): Validation => {
   for (const field of ['team', 'visible', 'authorization']) {
     validations.push(new RequiredFieldValidation(field))
   }
-  validations.push(new TeamPokemonValidation(new PokemonFirstGenValidatorAdapter(new AxiosAdapter())))
+  const axiosAdapter = new AxiosAdapter()
+  validations.push(new TeamPokemonValidation(
+    new PokemonFirstGenValidatorAdapter(axiosAdapter),
+    new AbilityValidatorAdapter(axiosAdapter)
+  ))
   return new ValidationComposite(validations)
 }

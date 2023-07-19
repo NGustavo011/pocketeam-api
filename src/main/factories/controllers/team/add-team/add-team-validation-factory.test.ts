@@ -1,5 +1,6 @@
 
 import { AxiosAdapter } from '../../../../../infra/http-client/adapters/axios/axios-adapter'
+import { AbilityValidatorAdapter } from '../../../../../infra/validators/ability-validator/ability-validator-adapter'
 import { PokemonFirstGenValidatorAdapter } from '../../../../../infra/validators/pokemon-first-gen-validator/pokemon-validator-adapter'
 import { type Validation } from '../../../../../presentation/contracts/validation'
 import { RequiredFieldValidation } from '../../../../../validation/validators/required-field-validation'
@@ -17,7 +18,10 @@ describe('SignUp Validation Factory', () => {
       validations.push(new RequiredFieldValidation(field))
     }
     const axiosAdapter = new AxiosAdapter()
-    validations.push(new TeamPokemonValidation(new PokemonFirstGenValidatorAdapter(axiosAdapter)))
+    validations.push(new TeamPokemonValidation(
+      new PokemonFirstGenValidatorAdapter(axiosAdapter),
+      new AbilityValidatorAdapter(axiosAdapter)
+    ))
     expect(ValidationComposite).toHaveBeenCalledWith(validations)
   })
 })
