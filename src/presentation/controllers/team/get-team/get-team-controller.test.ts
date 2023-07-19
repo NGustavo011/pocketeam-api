@@ -16,7 +16,7 @@ const mockRequest = (): HttpRequest => {
     headers: {
       authorization: 'any_token'
     },
-    params: {
+    query: {
       userId: ''
     }
   }
@@ -80,7 +80,7 @@ describe('GetTeam Controller', () => {
       await sut.execute(mockRequest())
       expect(getSpy).toHaveBeenCalledWith({
         userId: 'any_user_id',
-        searchUserId: mockRequest().params.userId
+        searchUserId: mockRequest().query.userId
       })
     })
     test('Deve retornar 500 se GetTeam lançar uma exceção', async () => {

@@ -8,7 +8,7 @@ import { makeGetTeamController } from '../../factories/controllers/team/get-team
 
 export const teamRoutes = Router()
 
-teamRoutes.get('/team/:userId?/:id?', adaptRoute(makeGetTeamController()))
+teamRoutes.get('/team', adaptRoute(makeGetTeamController()))
 teamRoutes.post('/team', adaptRoute(makeAddTeamController()))
 teamRoutes.put('/team/:teamId', adaptRoute(makeEditTeamController()))
 teamRoutes.delete('/team/:teamId', adaptRoute(makeDeleteTeamController()))
