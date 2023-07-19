@@ -126,6 +126,11 @@ const makeSut = (): SutTypes => {
 }
 
 describe('Team Pokemon Validation', () => {
+  test('Não deve retornar nada se a validação não falhar', async () => {
+    const { sut } = makeSut()
+    const error = await sut.validate(mockInput())
+    expect(error).toBeFalsy()
+  })
   describe('PokemonFirstGenValidator dependency', () => {
     test('Deve retornar um erro se o PokemonFirstGenValidator retornar false', async () => {
       const { sut, pokemonFirstGenValidatorStub } = makeSut()

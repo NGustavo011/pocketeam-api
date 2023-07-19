@@ -44,7 +44,6 @@ export class TeamPokemonValidation implements Validation {
         moveList.push(move.name)
       }
     }
-
     return null
   }
 }
