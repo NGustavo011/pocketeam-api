@@ -2,6 +2,7 @@
 import { type PokemonTeam, type Team } from '../../domain/models/team'
 import { PokemonInvalidError } from '../../presentation/errors'
 import { AbilityInvalidError } from '../../presentation/errors/ability-invalid-error'
+import { DuplicatedMoveError } from '../../presentation/errors/duplicated-move-error'
 import { HoldItemInvalidError } from '../../presentation/errors/hold-item-invalid-error'
 import { LengthInvalidError } from '../../presentation/errors/length-invalid-error'
 import { MoveInvalidError } from '../../presentation/errors/move-invalid-error'
@@ -43,6 +44,24 @@ const mockPokemonWithFiveMoves = (): PokemonTeam[0] => {
         {
           name: 'transform'
         },
+        {
+          name: 'transform'
+        },
+        {
+          name: 'transform'
+        }
+      ]
+    }
+  }
+}
+
+const mockPokemonWithDuplicatedMoves = (): PokemonTeam[0] => {
+  return {
+    pokemon: {
+      name: 'ditto',
+      ability: 'imposter',
+      holdItem: 'cheri-berry',
+      moves: [
         {
           name: 'transform'
         },
@@ -264,6 +283,21 @@ describe('Team Pokemon Validation', () => {
         const error = await sut.validate(mockInput())
         expect(error).toEqual(new LengthInvalidError('a pokemon must have between 1 to 4 moves'))
       })
+    })
+  })
+  describe('Move duplicated validation', () => {
+    test('Deve retornar um erro caso o pokémon contenha moves duplicados', async () => {
+      const { sut } = makeSut()
+      mockInput = jest.fn().mockImplementationOnce(() => {
+        return {
+          team: [
+            mockPokemonWithDuplicatedMoves()
+          ],
+          visible: true
+        }
+      })
+      const error = await sut.validate(mockInput())
+      expect(error).toEqual(new DuplicatedMoveError('transform'))
     })
   })
 })

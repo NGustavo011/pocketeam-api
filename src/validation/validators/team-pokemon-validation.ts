@@ -2,6 +2,7 @@ import { type PokemonTeam } from '../../domain/models/team'
 import { type Validation } from '../../presentation/contracts/validation'
 import { PokemonInvalidError } from '../../presentation/errors'
 import { AbilityInvalidError } from '../../presentation/errors/ability-invalid-error'
+import { DuplicatedMoveError } from '../../presentation/errors/duplicated-move-error'
 import { HoldItemInvalidError } from '../../presentation/errors/hold-item-invalid-error'
 import { LengthInvalidError } from '../../presentation/errors/length-invalid-error'
 import { MoveInvalidError } from '../../presentation/errors/move-invalid-error'
@@ -20,6 +21,7 @@ export class TeamPokemonValidation implements Validation {
   }
 
   async validate (input: any): Promise<Error | null> {
+    const moveList = [] as string[]
     const team = input.team as PokemonTeam
     if (team.length < 1 || team.length > 6) {
       return new LengthInvalidError('a pokemon team must have between 1 to 6 pokemon')
@@ -36,8 +38,10 @@ export class TeamPokemonValidation implements Validation {
         return new LengthInvalidError('a pokemon must have between 1 to 4 moves')
       }
       for (const move of pokemonTeam.pokemon.moves) {
+        if (moveList.includes(move.name)) { return new DuplicatedMoveError(move.name) }
         const isValidMove = await this.moveValidator.isValid(pokemon, move.name)
         if (!isValidMove) { return new MoveInvalidError(move.name) }
+        moveList.push(move.name)
       }
     }
 
