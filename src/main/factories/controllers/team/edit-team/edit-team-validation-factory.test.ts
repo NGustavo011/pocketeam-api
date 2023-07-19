@@ -8,15 +8,15 @@ import { type Validation } from '../../../../../presentation/contracts/validatio
 import { RequiredFieldValidation } from '../../../../../validation/validators/required-field-validation'
 import { TeamPokemonValidation } from '../../../../../validation/validators/team-pokemon-validation'
 import { ValidationComposite } from '../../../../../validation/validators/validation-composite'
-import { makeAddTeamValidation } from './add-team-validation-factory'
+import { makeEditTeamValidation } from './edit-team-validation-factory'
 
 jest.mock('../../../../../validation/validators/validation-composite')
 
-describe('AddTeam Validation Factory', () => {
+describe('EditTeam Validation Factory', () => {
   test('Deve chamar o ValidationComposite com todas os validadores', () => {
-    makeAddTeamValidation()
+    makeEditTeamValidation()
     const validations: Validation[] = []
-    for (const field of ['team', 'visible', 'authorization']) {
+    for (const field of ['team', 'visible', 'authorization', 'teamId']) {
       validations.push(new RequiredFieldValidation(field))
     }
     const axiosAdapter = new AxiosAdapter()

@@ -1,4 +1,3 @@
-
 import { AxiosAdapter } from '../../../../../infra/http-client/adapters/axios/axios-adapter'
 import { AbilityValidatorAdapter } from '../../../../../infra/validators/ability-validator/ability-validator-adapter'
 import { HoldItemValidatorAdapter } from '../../../../../infra/validators/hold-item-validator/hold-item-validator-adapter'
@@ -8,24 +7,18 @@ import { type Validation } from '../../../../../presentation/contracts/validatio
 import { RequiredFieldValidation } from '../../../../../validation/validators/required-field-validation'
 import { TeamPokemonValidation } from '../../../../../validation/validators/team-pokemon-validation'
 import { ValidationComposite } from '../../../../../validation/validators/validation-composite'
-import { makeAddTeamValidation } from './add-team-validation-factory'
 
-jest.mock('../../../../../validation/validators/validation-composite')
-
-describe('AddTeam Validation Factory', () => {
-  test('Deve chamar o ValidationComposite com todas os validadores', () => {
-    makeAddTeamValidation()
-    const validations: Validation[] = []
-    for (const field of ['team', 'visible', 'authorization']) {
-      validations.push(new RequiredFieldValidation(field))
-    }
-    const axiosAdapter = new AxiosAdapter()
-    validations.push(new TeamPokemonValidation(
-      new PokemonFirstGenValidatorAdapter(axiosAdapter),
-      new AbilityValidatorAdapter(axiosAdapter),
-      new HoldItemValidatorAdapter(axiosAdapter),
-      new MoveValidatorAdapter(axiosAdapter)
-    ))
-    expect(ValidationComposite).toHaveBeenCalledWith(validations)
-  })
-})
+export const makeEditTeamValidation = (): Validation => {
+  const validations: Validation[] = []
+  for (const field of ['team', 'visible', 'authorization', 'teamId']) {
+    validations.push(new RequiredFieldValidation(field))
+  }
+  const axiosAdapter = new AxiosAdapter()
+  validations.push(new TeamPokemonValidation(
+    new PokemonFirstGenValidatorAdapter(axiosAdapter),
+    new AbilityValidatorAdapter(axiosAdapter),
+    new HoldItemValidatorAdapter(axiosAdapter),
+    new MoveValidatorAdapter(axiosAdapter)
+  ))
+  return new ValidationComposite(validations)
+}
