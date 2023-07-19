@@ -2,9 +2,12 @@
 import { type Team } from '../../domain/models/team'
 import { PokemonInvalidError } from '../../presentation/errors'
 import { AbilityInvalidError } from '../../presentation/errors/ability-invalid-error'
+import { HoldItemInvalidError } from '../../presentation/errors/hold-item-invalid-error'
 import { type AbilityValidator } from '../contracts/ability-validator'
+import { type HoldItemValidator } from '../contracts/hold-item-validator'
 import { type PokemonFirstGenValidator } from '../contracts/pokemon-first-gen-validator'
 import { mockAbilityValidator } from '../test/mock-ability-validator'
+import { mockHoldItemValidator } from '../test/mock-hold-item-validator'
 import { mockPokemonFirstGenValidator } from '../test/mock-pokemon-first-gen-validator'
 import { TeamPokemonValidation } from './team-pokemon-validation'
 
@@ -32,16 +35,19 @@ interface SutTypes {
   sut: TeamPokemonValidation
   pokemonFirstGenValidatorStub: PokemonFirstGenValidator
   abilityValidatorStub: AbilityValidator
+  holdItemValidatorStub: HoldItemValidator
 }
 
 const makeSut = (): SutTypes => {
   const pokemonFirstGenValidatorStub = mockPokemonFirstGenValidator()
   const abilityValidatorStub = mockAbilityValidator()
-  const sut = new TeamPokemonValidation(pokemonFirstGenValidatorStub, abilityValidatorStub)
+  const holdItemValidatorStub = mockHoldItemValidator()
+  const sut = new TeamPokemonValidation(pokemonFirstGenValidatorStub, abilityValidatorStub, holdItemValidatorStub)
   return {
     sut,
     pokemonFirstGenValidatorStub,
-    abilityValidatorStub
+    abilityValidatorStub,
+    holdItemValidatorStub
   }
 }
 
@@ -88,6 +94,30 @@ describe('Team Pokemon Validation', () => {
     test('Propague o erro se o AbilityValidator lançar um erro', async () => {
       const { sut, abilityValidatorStub } = makeSut()
       jest.spyOn(abilityValidatorStub, 'isValid').mockImplementationOnce(() => {
+        throw new Error()
+      })
+      const promise = sut.validate(mockInput())
+      await expect(promise).rejects.toThrow()
+    })
+  })
+  describe('HoldItemValidator dependency', () => {
+    test('Deve retornar um erro se o HoldItemValidator retornar false', async () => {
+      const { sut, holdItemValidatorStub } = makeSut()
+      jest.spyOn(holdItemValidatorStub, 'isValid').mockReturnValueOnce(Promise.resolve(false))
+      const fakeInput = mockInput()
+      fakeInput.team[0].pokemon.holdItem = 'invalid_hold_item'
+      const error = await sut.validate(fakeInput)
+      expect(error).toEqual(new HoldItemInvalidError('invalid_hold_item'))
+    })
+    test('Deve chamar o HoldItemValidator utilizando uma habilidade válida', async () => {
+      const { sut, holdItemValidatorStub } = makeSut()
+      const isValidSpy = jest.spyOn(holdItemValidatorStub, 'isValid')
+      await sut.validate(mockInput())
+      expect(isValidSpy).toHaveBeenCalledWith('cheri-berry')
+    })
+    test('Propague o erro se o AbilityValidator lançar um erro', async () => {
+      const { sut, holdItemValidatorStub } = makeSut()
+      jest.spyOn(holdItemValidatorStub, 'isValid').mockImplementationOnce(() => {
         throw new Error()
       })
       const promise = sut.validate(mockInput())
