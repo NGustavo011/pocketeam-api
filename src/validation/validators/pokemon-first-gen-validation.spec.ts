@@ -24,7 +24,7 @@ describe('Pokemon First Gen Validation', () => {
     const error = await sut.validate({ pokemonName: 'agumon' })
     expect(error).toEqual(new PokemonInvalidError('agumon'))
   })
-  test('Deve chamar o PokemonFirstGenValidator utilizando o email correto', async () => {
+  test('Deve chamar o PokemonFirstGenValidator utilizando um pokemon válido', async () => {
     const { sut, pokemonFirstGenValidatorStub } = makeSut()
     const isValidSpy = jest.spyOn(pokemonFirstGenValidatorStub, 'isValid')
     await sut.validate({ pokemonName: 'bulbasaur' })

@@ -8,5 +8,5 @@ export const addTeamParamsSchema = {
       type: 'boolean'
     }
   },
-  required: ['team']
+  required: ['team', 'visible']
 }

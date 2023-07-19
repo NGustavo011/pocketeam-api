@@ -33,15 +33,12 @@ describe('Pokemon Routes', () => {
         team: [
           {
             pokemon: {
-              name: 'pokemon-1',
-              ability: 'ability-1',
-              holdItem: 'hold-item-1',
+              name: 'ditto',
+              ability: 'imposter',
+              holdItem: 'cheri-berry',
               moves: [
                 {
-                  name: 'move-1'
-                },
-                {
-                  name: 'move-2'
+                  name: 'transform'
                 }
               ]
             }
