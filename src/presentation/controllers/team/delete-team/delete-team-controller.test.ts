@@ -4,7 +4,7 @@ import { type DeleteTeamContract } from '../../../../domain/usecases-contracts/t
 import { mockValidation } from '../../../../validation/test/mock-validation'
 import { type HttpRequest } from '../../../contracts/http'
 import { type Validation } from '../../../contracts/validation'
-import { MissingParamError } from '../../../errors'
+import { InvalidParamError, MissingParamError } from '../../../errors'
 import { badRequest, noContent, serverError, unauthorized } from '../../../helpers/http/http-helper'
 import { mockValidateToken } from '../../../test/mock-account'
 import { mockDeleteTeam } from '../../../test/mock-team'
@@ -81,6 +81,12 @@ describe('DeleteTeam Controller', () => {
         teamId: mockRequest().params.teamId,
         userId: 'any_user_id'
       })
+    })
+    test('Deve retornar 400 se DeleteTeam retornar null', async () => {
+      const { sut, deleteTeamStub } = makeSut()
+      jest.spyOn(deleteTeamStub, 'delete').mockReturnValueOnce(Promise.resolve(false))
+      const httpResponse = await sut.execute(mockRequest())
+      expect(httpResponse).toEqual(badRequest(new InvalidParamError('team not found to user specified')))
     })
     test('Deve retornar 500 se DeleteTeam lançar uma exceção', async () => {
       const { sut, deleteTeamStub } = makeSut()

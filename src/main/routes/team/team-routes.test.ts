@@ -105,4 +105,10 @@ describe('Pokemon Routes', () => {
       }).expect(204)
     })
   })
+  describe('PUT /team/:teamId', () => {
+    test('Deve retornar status code 204 em caso de sucesso na edição de um time', async () => {
+      const { token, teamId } = await mockTeam()
+      await request(app).delete(`/api/team/${teamId}`).set('authorization', token).expect(204)
+    })
+  })
 })

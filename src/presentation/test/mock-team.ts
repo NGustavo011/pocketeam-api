@@ -34,8 +34,8 @@ export const mockEditTeam = (): EditTeamContract => {
 
 export const mockDeleteTeam = (): DeleteTeamContract => {
   class DeleteTeamStub implements DeleteTeamContract {
-    async delete (deleteTeamParams: DeleteTeamParams): Promise<void> {
-      await Promise.resolve()
+    async delete (deleteTeamParams: DeleteTeamParams): Promise<boolean> {
+      return await Promise.resolve(true)
     }
   }
   return new DeleteTeamStub()

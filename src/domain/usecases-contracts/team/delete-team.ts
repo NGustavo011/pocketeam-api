@@ -4,5 +4,5 @@ export interface DeleteTeamParams {
 }
 
 export interface DeleteTeamContract {
-  delete: (deleteTeamParams: DeleteTeamParams) => Promise<void>
+  delete: (deleteTeamParams: DeleteTeamParams) => Promise<boolean>
 }

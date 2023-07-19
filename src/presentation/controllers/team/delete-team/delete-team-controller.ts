@@ -3,6 +3,7 @@ import { type DeleteTeamContract } from '../../../../domain/usecases-contracts/t
 import { Controller } from '../../../contracts/controller'
 import { type HttpRequest, type HttpResponse } from '../../../contracts/http'
 import { type Validation } from '../../../contracts/validation'
+import { InvalidParamError } from '../../../errors'
 import { badRequest, noContent, unauthorized } from '../../../helpers/http/http-helper'
 
 export class DeleteTeamController extends Controller {
@@ -25,10 +26,13 @@ export class DeleteTeamController extends Controller {
       return unauthorized()
     }
     const { teamId } = httpRequest.params
-    await this.deleteTeam.delete({
+    const deleted = await this.deleteTeam.delete({
       userId: payload.userId,
       teamId
     })
+    if (!deleted) {
+      return badRequest(new InvalidParamError('team not found to user specified'))
+    }
     return noContent()
   }
 }

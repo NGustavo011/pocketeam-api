@@ -5,7 +5,8 @@ export class DeleteTeam implements DeleteTeamContract {
   constructor (private readonly deleteTeamRepository: DeleteTeamRepository) {
   }
 
-  async delete (deleteTeamParams: DeleteTeamParams): Promise<void> {
-    await this.deleteTeamRepository.delete(deleteTeamParams)
+  async delete (deleteTeamParams: DeleteTeamParams): Promise<boolean> {
+    const deleted = await this.deleteTeamRepository.delete(deleteTeamParams)
+    return deleted
   }
 }
