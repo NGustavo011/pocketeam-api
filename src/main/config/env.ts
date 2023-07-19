@@ -7,5 +7,6 @@ export const loadEnvConfig = (): void => {
 export default {
   port: process.env.PORT ?? 3333,
   databaseUrl: process.env.DATABASE_URL ?? 'postgresql://pato:pato11@localhost:5432/pocketeam?schema=public',
-  jwtSecret: process.env.JWT_SECRET ?? 'pato'
+  jwtSecret: process.env.JWT_SECRET ?? 'pato',
+  pokeApiUrl: process.env.POKE_API_URL ?? 'https://pokeapi.co/api/v2/'
 }

@@ -2,6 +2,7 @@
 import { type GetAllPokemonRepository } from '../../../data/repositories-contracts/pokemon/get-all-pokemon-repository'
 import { type GetPokemonRepository } from '../../../data/repositories-contracts/pokemon/get-pokemon-repository'
 import { type PokemonModel, type AllPokemonModel } from '../../../domain/models/pokemon'
+import env from '../../../main/config/env'
 import { type HttpClient } from '../contract/http-client'
 
 export class PokemonHttpClient implements GetAllPokemonRepository, GetPokemonRepository {
@@ -9,7 +10,7 @@ export class PokemonHttpClient implements GetAllPokemonRepository, GetPokemonRep
   }
 
   async getAll (): Promise<AllPokemonModel> {
-    const response = await this.httpClient.get('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=151')
+    const response = await this.httpClient.get(`${env.pokeApiUrl}pokemon/?offset=0&limit=151`)
     return response.results.map((pokemon) => {
       return { name: pokemon.name }
     })
@@ -17,7 +18,7 @@ export class PokemonHttpClient implements GetAllPokemonRepository, GetPokemonRep
 
   async get (name: string): Promise<PokemonModel | null> {
     try {
-      const response = await this.httpClient.get(`https://pokeapi.co/api/v2/pokemon/${name}`)
+      const response = await this.httpClient.get(`${env.pokeApiUrl}pokemon/${name}`)
       return {
         name: response.forms[0].name,
         abilities: response.abilities.map(abilityData => {

@@ -1,3 +1,4 @@
+import env from '../../../main/config/env'
 import { AxiosAdapter } from '../../http-client/adapters/axios/axios-adapter'
 import { MoveValidatorAdapter } from './move-validator-adapter'
 
@@ -56,6 +57,6 @@ describe('MoveValidator Adapter', () => {
     const getSpy = jest.spyOn(axiosAdapter, 'get')
     const pokemonName = 'ditto'
     await sut.isValid(pokemonName, 'transform')
-    expect(getSpy).toHaveBeenCalledWith(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`)
+    expect(getSpy).toHaveBeenCalledWith(`${env.pokeApiUrl}pokemon/${pokemonName}`)
   })
 })

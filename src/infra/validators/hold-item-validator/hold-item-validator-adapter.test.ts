@@ -1,3 +1,4 @@
+import env from '../../../main/config/env'
 import { AxiosAdapter } from '../../http-client/adapters/axios/axios-adapter'
 import { HoldItemValidatorAdapter } from './hold-item-validator-adapter'
 
@@ -35,6 +36,6 @@ describe('HoldItemValidator Adapter', () => {
     const getSpy = jest.spyOn(axiosAdapter, 'get')
     const pokemonName = 'ditto'
     await sut.isValid(pokemonName)
-    expect(getSpy).toHaveBeenCalledWith('https://pokeapi.co/api/v2/item-attribute/holdable-active/')
+    expect(getSpy).toHaveBeenCalledWith(`${env.pokeApiUrl}item-attribute/holdable-active/`)
   })
 })
