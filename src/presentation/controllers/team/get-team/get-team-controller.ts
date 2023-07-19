@@ -24,8 +24,8 @@ export class GetTeamController extends Controller {
     if (!payload) {
       return unauthorized()
     }
-    const { userId } = httpRequest.params
-    const teams = await this.getTeam.get({ userId: payload.userId, searchUserId: userId })
+    const { userId, id } = httpRequest.params
+    const teams = await this.getTeam.get({ userId: payload.userId, searchUserId: userId, id })
     return ok(teams)
   }
 }

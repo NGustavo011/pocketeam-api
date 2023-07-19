@@ -61,6 +61,12 @@ describe('Pokemon Routes', () => {
   beforeEach(async () => {
     await clearDatabase()
   })
+  describe('GET /team/:userId?/:id?', () => {
+    test('Deve retornar status code 200 em caso de sucesso na listagem de times', async () => {
+      const token = await mockToken()
+      await request(app).get('/api/team').set('authorization', token).expect(200)
+    })
+  })
   describe('POST /team', () => {
     test('Deve retornar status code 204 em caso de sucesso na criação de um time', async () => {
       const token = await mockToken()
@@ -105,8 +111,8 @@ describe('Pokemon Routes', () => {
       }).expect(204)
     })
   })
-  describe('PUT /team/:teamId', () => {
-    test('Deve retornar status code 204 em caso de sucesso na edição de um time', async () => {
+  describe('DELETE /team/:teamId', () => {
+    test('Deve retornar status code 204 em caso de sucesso na remoção de um time', async () => {
       const { token, teamId } = await mockTeam()
       await request(app).delete(`/api/team/${teamId}`).set('authorization', token).expect(204)
     })
