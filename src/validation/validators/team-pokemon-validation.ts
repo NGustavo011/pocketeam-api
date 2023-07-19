@@ -3,6 +3,7 @@ import { type Validation } from '../../presentation/contracts/validation'
 import { PokemonInvalidError } from '../../presentation/errors'
 import { AbilityInvalidError } from '../../presentation/errors/ability-invalid-error'
 import { HoldItemInvalidError } from '../../presentation/errors/hold-item-invalid-error'
+import { LengthInvalidError } from '../../presentation/errors/length-invalid-error'
 import { MoveInvalidError } from '../../presentation/errors/move-invalid-error'
 import { type AbilityValidator } from '../contracts/ability-validator'
 import { type HoldItemValidator } from '../contracts/hold-item-validator'
@@ -20,6 +21,10 @@ export class TeamPokemonValidation implements Validation {
 
   async validate (input: any): Promise<Error | null> {
     const team = input.team as PokemonTeam
+    console.log(team.length)
+    if (team.length < 1 || team.length > 6) {
+      return new LengthInvalidError('a pokemon team must have between 1 to 6 pokemon')
+    }
     for (const pokemonTeam of team) {
       const pokemon = pokemonTeam.pokemon.name
       const isValidPokemon = await this.pokemonFirstGenValidator.isValid(pokemon)

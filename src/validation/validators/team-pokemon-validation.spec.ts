@@ -1,8 +1,9 @@
 
-import { type Team } from '../../domain/models/team'
+import { type PokemonTeam, type Team } from '../../domain/models/team'
 import { PokemonInvalidError } from '../../presentation/errors'
 import { AbilityInvalidError } from '../../presentation/errors/ability-invalid-error'
 import { HoldItemInvalidError } from '../../presentation/errors/hold-item-invalid-error'
+import { LengthInvalidError } from '../../presentation/errors/length-invalid-error'
 import { MoveInvalidError } from '../../presentation/errors/move-invalid-error'
 import { type AbilityValidator } from '../contracts/ability-validator'
 import { type HoldItemValidator } from '../contracts/hold-item-validator'
@@ -14,21 +15,25 @@ import { mockMoveValidator } from '../test/mock-move-validator'
 import { mockPokemonFirstGenValidator } from '../test/mock-pokemon-first-gen-validator'
 import { TeamPokemonValidation } from './team-pokemon-validation'
 
-export const mockInput = (): Team => {
+const mockPokemon = (): PokemonTeam[0] => {
+  return {
+    pokemon: {
+      name: 'ditto',
+      ability: 'imposter',
+      holdItem: 'cheri-berry',
+      moves: [
+        {
+          name: 'transform'
+        }
+      ]
+    }
+  }
+}
+
+let mockInput = (): Team => {
   return {
     team: [
-      {
-        pokemon: {
-          name: 'ditto',
-          ability: 'imposter',
-          holdItem: 'cheri-berry',
-          moves: [
-            {
-              name: 'transform'
-            }
-          ]
-        }
-      }
+      mockPokemon()
     ],
     visible: true
   }
@@ -157,6 +162,41 @@ describe('Team Pokemon Validation', () => {
       })
       const promise = sut.validate(mockInput())
       await expect(promise).rejects.toThrow()
+    })
+  })
+  describe('Length validations', () => {
+    describe('Team', () => {
+      test('Deve retornar um erro caso o tamanho do time seja <1', async () => {
+        const { sut } = makeSut()
+        mockInput = jest.fn().mockImplementationOnce(() => {
+          return {
+            team: [
+            ],
+            visible: true
+          }
+        })
+        const error = await sut.validate(mockInput())
+        expect(error).toEqual(new LengthInvalidError('a pokemon team must have between 1 to 6 pokemon'))
+      })
+      test('Deve retornar um erro caso o tamanho do time seja >6', async () => {
+        const { sut } = makeSut()
+        mockInput = jest.fn().mockImplementationOnce(() => {
+          return {
+            team: [
+              mockPokemon(),
+              mockPokemon(),
+              mockPokemon(),
+              mockPokemon(),
+              mockPokemon(),
+              mockPokemon(),
+              mockPokemon()
+            ],
+            visible: true
+          }
+        })
+        const error = await sut.validate(mockInput())
+        expect(error).toEqual(new LengthInvalidError('a pokemon team must have between 1 to 6 pokemon'))
+      })
     })
   })
 })
