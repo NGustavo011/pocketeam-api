@@ -1,12 +1,11 @@
-import { mockEditTeamReturn } from '../../../../data/test/mock-team'
 import { throwError } from '../../../../domain/test/test-helpers'
 import { type ValidateTokenContract } from '../../../../domain/usecases-contracts/account/validate-token'
 import { type EditTeamContract } from '../../../../domain/usecases-contracts/team/edit-team'
 import { mockValidation } from '../../../../validation/test/mock-validation'
 import { type HttpRequest } from '../../../contracts/http'
 import { type Validation } from '../../../contracts/validation'
-import { MissingParamError } from '../../../errors'
-import { badRequest, ok, serverError, unauthorized } from '../../../helpers/http/http-helper'
+import { InvalidParamError, MissingParamError } from '../../../errors'
+import { badRequest, noContent, serverError, unauthorized } from '../../../helpers/http/http-helper'
 import { mockValidateToken } from '../../../test/mock-account'
 import { mockEditTeam } from '../../../test/mock-team'
 import { EditTeamController } from './edit-team-controller'
@@ -120,6 +119,12 @@ describe('EditTeam Controller', () => {
         userId: 'any_user_id'
       })
     })
+    test('Deve retornar 400 se EditTeam retornar null', async () => {
+      const { sut, editTeamStub } = makeSut()
+      jest.spyOn(editTeamStub, 'edit').mockReturnValueOnce(Promise.resolve(null))
+      const httpResponse = await sut.execute(mockRequest())
+      expect(httpResponse).toEqual(badRequest(new InvalidParamError('team not found to user specified')))
+    })
     test('Deve retornar 500 se EditTeam lançar uma exceção', async () => {
       const { sut, editTeamStub } = makeSut()
       jest.spyOn(editTeamStub, 'edit').mockImplementationOnce(throwError)
@@ -130,6 +135,6 @@ describe('EditTeam Controller', () => {
   test('Retorne status 200 se o dado provido for válido', async () => {
     const { sut } = makeSut()
     const httpResponse = await sut.execute(mockRequest())
-    expect(httpResponse).toEqual(ok(mockEditTeamReturn()))
+    expect(httpResponse).toEqual(noContent())
   })
 })

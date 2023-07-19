@@ -16,6 +16,41 @@ const mockToken = async (): Promise<string> => {
   return sign({ id: account.id }, env.jwtSecret)
 }
 
+const mockTeam = async (): Promise<{
+  token: string
+  teamId: string
+}> => {
+  const account = await prisma.account.create({
+    data: {
+      name: 'test',
+      email: 'test@gmail.com',
+      password: 'test'
+    }
+  })
+  const teamCreated = await prisma.team.create({
+    data: {
+      userId: account.id,
+      visible: true
+    }
+  })
+  await prisma.pokemon.createMany({
+    data: [
+      {
+        name: 'ditto',
+        ability: 'limber',
+        holdItem: 'chesto-berry',
+        teamId: teamCreated.id,
+        moves: ['transform']
+      }
+    ]
+  })
+  const token = sign({ id: account.id }, env.jwtSecret)
+  return {
+    token,
+    teamId: teamCreated.id
+  }
+}
+
 describe('Pokemon Routes', () => {
   beforeAll(async () => {
     await prisma.$connect()
@@ -45,6 +80,28 @@ describe('Pokemon Routes', () => {
           }
         ],
         visible: true
+      }).expect(204)
+    })
+  })
+  describe('PUT /team/:teamId', () => {
+    test('Deve retornar status code 204 em caso de sucesso na edição de um time', async () => {
+      const { token, teamId } = await mockTeam()
+      await request(app).put(`/api/team/${teamId}`).set('authorization', token).send({
+        team: [
+          {
+            pokemon: {
+              name: 'ditto',
+              ability: 'imposter',
+              holdItem: 'cheri-berry',
+              moves: [
+                {
+                  name: 'transform'
+                }
+              ]
+            }
+          }
+        ],
+        visible: false
       }).expect(204)
     })
   })

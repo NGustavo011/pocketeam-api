@@ -3,7 +3,8 @@ import { type EditTeamContract } from '../../../../domain/usecases-contracts/tea
 import { Controller } from '../../../contracts/controller'
 import { type HttpRequest, type HttpResponse } from '../../../contracts/http'
 import { type Validation } from '../../../contracts/validation'
-import { badRequest, ok, unauthorized } from '../../../helpers/http/http-helper'
+import { InvalidParamError } from '../../../errors'
+import { badRequest, noContent, unauthorized } from '../../../helpers/http/http-helper'
 
 export class EditTeamController extends Controller {
   constructor (
@@ -26,12 +27,15 @@ export class EditTeamController extends Controller {
     }
     const { team, visible } = httpRequest.body
     const { teamId } = httpRequest.params
-    const teamModel = await this.editTeam.edit({
+    const editedTeam = await this.editTeam.edit({
       team,
       visible: Boolean(visible),
       userId: payload.userId,
       teamId
     })
-    return ok(teamModel)
+    if (!editedTeam) {
+      return badRequest(new InvalidParamError('team not found to user specified'))
+    }
+    return noContent()
   }
 }
