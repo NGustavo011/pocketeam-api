@@ -15,6 +15,45 @@ import { mockMoveValidator } from '../test/mock-move-validator'
 import { mockPokemonFirstGenValidator } from '../test/mock-pokemon-first-gen-validator'
 import { TeamPokemonValidation } from './team-pokemon-validation'
 
+const mockPokemonWithZeroMoves = (): PokemonTeam[0] => {
+  return {
+    pokemon: {
+      name: 'ditto',
+      ability: 'imposter',
+      holdItem: 'cheri-berry',
+      moves: [
+      ]
+    }
+  }
+}
+
+const mockPokemonWithFiveMoves = (): PokemonTeam[0] => {
+  return {
+    pokemon: {
+      name: 'ditto',
+      ability: 'imposter',
+      holdItem: 'cheri-berry',
+      moves: [
+        {
+          name: 'transform'
+        },
+        {
+          name: 'transform'
+        },
+        {
+          name: 'transform'
+        },
+        {
+          name: 'transform'
+        },
+        {
+          name: 'transform'
+        }
+      ]
+    }
+  }
+}
+
 const mockPokemon = (): PokemonTeam[0] => {
   return {
     pokemon: {
@@ -196,6 +235,34 @@ describe('Team Pokemon Validation', () => {
         })
         const error = await sut.validate(mockInput())
         expect(error).toEqual(new LengthInvalidError('a pokemon team must have between 1 to 6 pokemon'))
+      })
+    })
+    describe('Move', () => {
+      test('Deve retornar um erro caso a quantidade de moves de um pokemon seja <1', async () => {
+        const { sut } = makeSut()
+        mockInput = jest.fn().mockImplementationOnce(() => {
+          return {
+            team: [
+              mockPokemonWithZeroMoves()
+            ],
+            visible: true
+          }
+        })
+        const error = await sut.validate(mockInput())
+        expect(error).toEqual(new LengthInvalidError('a pokemon must have between 1 to 4 moves'))
+      })
+      test('Deve retornar um erro caso a quantidade de moves de um pokemon seja >6', async () => {
+        const { sut } = makeSut()
+        mockInput = jest.fn().mockImplementationOnce(() => {
+          return {
+            team: [
+              mockPokemonWithFiveMoves()
+            ],
+            visible: true
+          }
+        })
+        const error = await sut.validate(mockInput())
+        expect(error).toEqual(new LengthInvalidError('a pokemon must have between 1 to 4 moves'))
       })
     })
   })

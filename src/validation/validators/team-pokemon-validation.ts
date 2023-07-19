@@ -21,7 +21,6 @@ export class TeamPokemonValidation implements Validation {
 
   async validate (input: any): Promise<Error | null> {
     const team = input.team as PokemonTeam
-    console.log(team.length)
     if (team.length < 1 || team.length > 6) {
       return new LengthInvalidError('a pokemon team must have between 1 to 6 pokemon')
     }
@@ -33,6 +32,9 @@ export class TeamPokemonValidation implements Validation {
       if (!isValidAbility) { return new AbilityInvalidError(pokemonTeam.pokemon.ability) }
       const isValidHoldItem = await this.holdItemValidator.isValid(pokemonTeam.pokemon.holdItem)
       if (!isValidHoldItem) { return new HoldItemInvalidError(pokemonTeam.pokemon.holdItem) }
+      if (pokemonTeam.pokemon.moves.length < 1 || pokemonTeam.pokemon.moves.length > 4) {
+        return new LengthInvalidError('a pokemon must have between 1 to 4 moves')
+      }
       for (const move of pokemonTeam.pokemon.moves) {
         const isValidMove = await this.moveValidator.isValid(pokemon, move.name)
         if (!isValidMove) { return new MoveInvalidError(move.name) }
