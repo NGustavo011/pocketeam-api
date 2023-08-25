@@ -51,4 +51,4 @@ Pocketeam API is built with a focus on the Clean Architecture principles to ensu
 Contributions are welcome! If you've found a bug or wish to add features to the API, feel free to submit a pull request.
 
 ## License
-This project is licensed under the ISC.
+This project is licensed under the MIT.
